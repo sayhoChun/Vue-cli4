@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <b>count : {{this.$store.state.count}}</b><br>
+    <b>count^2 : {{this.$store.getters.count}}</b><br>
     <input type="button" @click="increment()" value="increment"/>
     <input type="button" @click="decrement()" value="decrement"/>
   </div>
@@ -10,9 +11,7 @@
   export default {
     name: 'HelloWorld',
     data () {
-      return {
-
-      }
+      return {}
     },
     created: function () {
       console.log(this.$store)
