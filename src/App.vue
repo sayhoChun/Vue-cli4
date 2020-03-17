@@ -2,9 +2,12 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <div id="mixin">
-      <div id="sub" @click="onClick" @contextmenu.prevent="test">{{data}}</div>
-    </div>
+
+    <b-list-group id="mixin" class="text-center mt-3">
+      <b-list-group-item id="sub" @click="onClick" @contextmenu.prevent="test">
+        {{data}}
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
@@ -47,16 +50,7 @@ export default {
     color: #2c3e50;
     margin-top: 60px;
   }
-  #mixin{
-    display: table;
-    text-align: center;
-  }
   #sub {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-    width: 100px;
-    height: 100px;
     background-color: skyblue;
   }
 </style>
