@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import CONSTANTS from './Constants'
 
 Vue.use(Vuex);
 
@@ -9,7 +10,8 @@ export default new Vuex.Store({
         count: 0,
         weight: 2,
         random : 0,
-        regionList: null
+        regionList: null,
+        sidoList: null
     },
     mutations: {
         increment(state){
@@ -27,6 +29,9 @@ export default new Vuex.Store({
         },
         processRegion(state, payload){
             state.regionList = payload.data
+        },
+        processSido(state, payload){
+            state.sidoList = payload.data
         }
     },
     getters: {
@@ -41,6 +46,9 @@ export default new Vuex.Store({
         },
         regionList(state, /*getters*/){
             return state.regionList
+        },
+        sidoList(state, /*getters*/){
+            return state.sidoList
         }
     },
     actions: {
@@ -54,7 +62,7 @@ export default new Vuex.Store({
                     commit('failGenerateRandomNumber', res);
                 });
         },
-        getRegion({commit, /*state*/}, /*payload*/){
+        loadRegion({commit, /*state*/}, /*payload*/){
             console.log(arguments);
             axios.get("http://106.10.33.215:10040/info/region")
                 .then((res) =>{
@@ -63,7 +71,17 @@ export default new Vuex.Store({
                 .catch((res) => {
                     commit("connectionFail", res);
                 })
+        },
+        loadSido({commit, /*state*/}, payload){
+            console.log(arguments);
+            axios.get(CONSTANTS.API_URL + "/info/region/" + payload)
+                .then((res) =>{
+                    commit("processSido", res.data);
+                })
+                .catch((res) =>{
+                    commit("connectionFail", res);
+                })
         }
-    }
+    },
 })
 

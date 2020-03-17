@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello w-75 mx-auto">
     <b-list-group>
       <b-list-group-item>
         count
@@ -20,7 +20,36 @@
       <b-button variant="info" @click="this.randomNumber">random</b-button>
     </b-button-group>
 
-    <b-table class="mt-3" striped hover :items="this.regionList"></b-table>
+    <div>
+      <b-table class="mt-3 mx-auto small"  striped hover
+               :responsive="true"
+               :items="this.regionList"
+               :busy.sync="regionBusyFlag"
+               :fields="fields"
+               :primary-key="primaryKey"
+               @row-clicked="regionClickHandler"
+      >
+        <template v-slot:table-busy>
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong> Loading...</strong>
+          </div>
+        </template>
+      </b-table>
+
+      <b-table class="mt-3 mx-auto small" striped hover
+               :responsive="true"
+               :items="this.sidoList"
+               :busy.sync="sidoBusyFlag"
+      >
+        <template v-slot:table-busy>
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong> Loading...</strong>
+          </div>
+        </template>
+      </b-table>
+    </div>
   </div>
 </template>
 
@@ -29,13 +58,45 @@
   export default {
     name: 'HelloWorld',
     data () {
-      return {}
+      return {
+        regionBusyFlag: true,
+        sidoBusyFlag: false,
+        fields: [
+          {
+            key: "orderBy",
+            sortable: true
+          },
+          {
+            key: "description",
+            sortable: true
+          },
+          {
+            key: "abbreviation",
+            sortable: true
+          }
+        ],
+        primaryKey: "sidoID"
+      }
     },
     created: function (){
       console.log(this.$store)
     },
     mounted(){
-      this.$store.dispatch("getRegion");
+      const promise = new Promise(((resolve, reject) => {
+        if(this.$store.dispatch("loadRegion")){
+          resolve();
+        }else{
+          reject(Error("connection Error"));
+        }
+      }));
+
+      promise.then(() => {
+        window.setTimeout(() => {
+          this.toggleRegionBusy()
+        }, 400)
+      }, err => {
+        console.log(err);
+      });
     },
     methods: {
       ...mapMutations({
@@ -45,11 +106,33 @@
       ...mapActions({
         randomNumber: "generateRandomNumber"
       }),
+      toggleRegionBusy(){
+        this.regionBusyFlag = !this.regionBusyFlag
+      },
+      toggleSidoBusy(){
+        this.sidoBusyFlag = !this.sidoBusyFlag
+      },
+      regionClickHandler(record){
+        this.toggleSidoBusy();
+        const promise = new Promise(((resolve, reject) => {
+          if(this.$store.dispatch("loadSido", [record["sidoID"]])){
+            resolve();
+          }else{
+            reject(Error("connection Error"));
+          }
+        }));
+        promise.then(() => {
+          window.setTimeout(() => {
+            this.toggleSidoBusy();
+          }, 400)
+        })
+      }
     },
     computed: {
       ...mapState([
               "count",
-              "regionList"
+              "regionList",
+              "sidoList"
       ]),
       ...mapGetters([
               "powCount",
