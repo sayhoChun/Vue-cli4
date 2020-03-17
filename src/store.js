@@ -64,7 +64,7 @@ export default new Vuex.Store({
         },
         loadRegion({commit, /*state*/}, /*payload*/){
             console.log(arguments);
-            axios.get("http://106.10.33.215:10040/info/region")
+            axios.get(CONSTANTS.API_URL + "/info/region")
                 .then((res) =>{
                     commit("processRegion", res.data);
                 })
