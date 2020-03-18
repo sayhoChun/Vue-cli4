@@ -11,7 +11,9 @@ export default new Vuex.Store({
         weight: 2,
         random : 0,
         regionList: null,
-        sidoList: null
+        sidoList: null,
+        userRegion: null,
+        userSido: null
     },
     mutations: {
         increment(state){
@@ -32,6 +34,12 @@ export default new Vuex.Store({
         },
         processSido(state, payload){
             state.sidoList = payload.data
+        },
+        setUserRegion(state, payload){
+            state.userRegion = payload
+        },
+        setUserSido(state, payload){
+            state.userSido = payload
         }
     },
     getters: {
@@ -49,6 +57,12 @@ export default new Vuex.Store({
         },
         sidoList(state, /*getters*/){
             return state.sidoList
+        },
+        userRegion(state){
+            return state.userRegion
+        },
+        userSido(state){
+            return state.userSido
         }
     },
     actions: {

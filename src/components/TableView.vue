@@ -1,66 +1,31 @@
 <template>
-  <div class="hello w-75 mx-auto">
-    <b-list-group>
-      <b-list-group-item>
-        count
-        <b-badge variant="primary" pill>{{this.count}}</b-badge>
-      </b-list-group-item>
-      <b-list-group-item>x
-        count^2
-        <b-badge variant="primary" pill>{{this.powCount}}</b-badge>
-      </b-list-group-item>
-      <b-list-group-item>
-        random
-        <b-badge variant="primary" pill>{{this.random}}</b-badge>
-      </b-list-group-item>
-    </b-list-group>
-    <b-button-group class="mt-3">
-      <b-button variant="success" @click="this.increment">increment</b-button>
-      <b-button variant="danger" @click="this.decrement">decrement</b-button>
-      <b-button variant="info" @click="this.randomNumber">random</b-button>
-    </b-button-group>
-
-    <div>
-      <b-table class="mt-3 mx-auto small"  striped hover
-               :responsive="true"
-               :items="this.regionList"
-               :busy.sync="regionBusyFlag"
-               :fields="fields"
-               :primary-key="primaryKey"
-               @row-clicked="regionClickHandler"
-      >
-        <template v-slot:table-busy>
-          <div class="text-center text-danger my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong> Loading...</strong>
-          </div>
-        </template>
-      </b-table>
-
-<!--      <b-table class="mt-3 mx-auto small" striped hover-->
-<!--               :responsive="true"-->
-<!--               :items="this.sidoList"-->
-<!--               :busy.sync="sidoBusyFlag"-->
-<!--      >-->
-<!--        <template v-slot:table-busy>-->
-<!--          <div class="text-center text-danger my-2">-->
-<!--            <b-spinner class="align-middle"></b-spinner>-->
-<!--            <strong> Loading...</strong>-->
-<!--          </div>-->
-<!--        </template>-->
-<!--      </b-table>-->
-    </div>
+  <div class="w-75 mx-auto">
+    <b-table v-if="isVisible" class="mt-3 mx-auto small"  striped hover
+             :items="this.regionList"
+             :busy.sync="isBusy"
+             :fields="fields"
+             :primary-key="primaryKey"
+             @row-clicked="regionClickHandler"
+    >
+      <template v-slot:table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong> Loading...</strong>
+        </div>
+      </template>
+    </b-table>
+    <router-view class="view"></router-view>
   </div>
 </template>
 
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions} from "vuex";
+  import { mapState } from "vuex";
   export default {
     name: 'HelloWorld',
     data () {
       return {
-        regionBusyFlag: true,
-        sidoBusyFlag: false,
+        isVisible: true,
+        isBusy: true,
         fields: [
           {
             key: "orderBy",
@@ -93,52 +58,24 @@
       promise.then(() => {
         window.setTimeout(() => {
           this.toggleRegionBusy()
-        }, 400)
+        }, 600)
       }, err => {
         console.log(err);
       });
     },
     methods: {
-      ...mapMutations({
-        increment: "increment",
-        decrement: "decrement"
-      }),
-      ...mapActions({
-        randomNumber: "generateRandomNumber"
-      }),
       toggleRegionBusy(){
-        this.regionBusyFlag = !this.regionBusyFlag
-      },
-      toggleSidoBusy(){
-        this.sidoBusyFlag = !this.sidoBusyFlag
+        this.isBusy = !this.isBusy
       },
       regionClickHandler(record){
-        // this.toggleSidoBusy();
-        // const promise = new Promise(((resolve, reject) => {
-        //   if(this.$store.dispatch("loadSido", [record["sidoID"]])){
-        //     resolve();
-        //   }else{
-        //     reject(Error("connection Error"));
-        //   }
-        // }));
-        // promise.then(() => {
-        //   window.setTimeout(() => {
-        //     this.toggleSidoBusy();
-        //   }, 400)
-        // })
-
-        this.$router.push("/region/" + record["sidoID"] + "/sido")
+        this.isVisible = !this.isVisible;
+        this.$store.commit("setUserRegion", record["sidoID"]);
+        this.$router.push("/region/" + record["sidoID"]);
       }
     },
     computed: {
       ...mapState([
-              "count",
-              "regionList",
-              "sidoList"
-      ]),
-      ...mapGetters([
-              "powCount",
-              "random"
+              "regionList"
       ])
     }
   }
