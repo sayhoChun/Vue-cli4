@@ -26,8 +26,8 @@
             return{
                 sidoBusyFlag: true,
                 fields: [
-                    {key: "gugunID", label: "ID"},
-                    {key: "description", label: "지역"}
+                    {key: "gugunID", label: "ID", sortable: true},
+                    {key: "description", label: "지역", sortable: true}
                 ],
                 primaryKey: "gugunID"
             }

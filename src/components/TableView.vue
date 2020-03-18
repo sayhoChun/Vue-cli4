@@ -27,18 +27,9 @@
         isVisible: true,
         isBusy: true,
         fields: [
-          {
-            key: "orderBy",
-            sortable: true
-          },
-          {
-            key: "description",
-            sortable: true
-          },
-          {
-            key: "abbreviation",
-            sortable: true
-          }
+          {key: "orderBy", sortable: true},
+          {key: "description", sortable: true},
+          {key: "abbreviation", sortable: true}
         ],
         primaryKey: "sidoID"
       }

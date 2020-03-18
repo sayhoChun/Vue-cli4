@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-<!--    <TableView msg="Welcome to Your Vue.js App"/>-->
     <router-view class="view"></router-view>
   </div>
 </template>
@@ -10,7 +9,6 @@
 export default {
   name: 'App',
   components: {
-    // TableView: TableView
   },
   created() {
   },
