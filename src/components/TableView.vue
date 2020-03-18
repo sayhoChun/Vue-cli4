@@ -37,18 +37,18 @@
         </template>
       </b-table>
 
-      <b-table class="mt-3 mx-auto small" striped hover
-               :responsive="true"
-               :items="this.sidoList"
-               :busy.sync="sidoBusyFlag"
-      >
-        <template v-slot:table-busy>
-          <div class="text-center text-danger my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong> Loading...</strong>
-          </div>
-        </template>
-      </b-table>
+<!--      <b-table class="mt-3 mx-auto small" striped hover-->
+<!--               :responsive="true"-->
+<!--               :items="this.sidoList"-->
+<!--               :busy.sync="sidoBusyFlag"-->
+<!--      >-->
+<!--        <template v-slot:table-busy>-->
+<!--          <div class="text-center text-danger my-2">-->
+<!--            <b-spinner class="align-middle"></b-spinner>-->
+<!--            <strong> Loading...</strong>-->
+<!--          </div>-->
+<!--        </template>-->
+<!--      </b-table>-->
     </div>
   </div>
 </template>
@@ -79,7 +79,7 @@
       }
     },
     created: function (){
-      console.log(this.$store)
+      // console.log(this.$store)
     },
     mounted(){
       const promise = new Promise(((resolve, reject) => {
@@ -113,19 +113,21 @@
         this.sidoBusyFlag = !this.sidoBusyFlag
       },
       regionClickHandler(record){
-        this.toggleSidoBusy();
-        const promise = new Promise(((resolve, reject) => {
-          if(this.$store.dispatch("loadSido", [record["sidoID"]])){
-            resolve();
-          }else{
-            reject(Error("connection Error"));
-          }
-        }));
-        promise.then(() => {
-          window.setTimeout(() => {
-            this.toggleSidoBusy();
-          }, 400)
-        })
+        // this.toggleSidoBusy();
+        // const promise = new Promise(((resolve, reject) => {
+        //   if(this.$store.dispatch("loadSido", [record["sidoID"]])){
+        //     resolve();
+        //   }else{
+        //     reject(Error("connection Error"));
+        //   }
+        // }));
+        // promise.then(() => {
+        //   window.setTimeout(() => {
+        //     this.toggleSidoBusy();
+        //   }, 400)
+        // })
+
+        this.$router.push("/region/" + record["sidoID"] + "/sido")
       }
     },
     computed: {

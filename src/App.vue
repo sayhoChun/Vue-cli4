@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<!--    <TableView msg="Welcome to Your Vue.js App"/>-->
+
+    <router-view class="view"></router-view>
 
     <b-list-group id="mixin" class="text-center mt-3">
       <b-list-group-item id="sub" @click="onClick" @contextmenu.prevent="test">
@@ -13,17 +15,15 @@
 
 <script>
   import mixin from "./components/mixin/mixin";
-  import HelloWorld from './components/HelloWorld.vue'
+  // import TableView from './components/TableView.vue'
 
 export default {
   mixins: [mixin],
   name: 'App',
   components: {
-    HelloWorld
+    // TableView: TableView
   },
   created() {
-    console.log('component');
-    console.log(this.data)
   },
   data: function(){
     return {
