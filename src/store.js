@@ -77,7 +77,6 @@ export default new Vuex.Store({
                 });
         },
         loadRegion({commit, /*state*/}, /*payload*/){
-            console.log(arguments);
             axios.get(CONSTANTS.API_URL + "/info/region")
                 .then((res) =>{
                     commit("processRegion", res.data);
@@ -87,7 +86,6 @@ export default new Vuex.Store({
                 })
         },
         loadSido({commit, /*state*/}, payload){
-            console.log(arguments);
             axios.get(CONSTANTS.API_URL + "/info/region/" + payload)
                 .then((res) =>{
                     commit("processSido", res.data);
