@@ -45,8 +45,9 @@
     created: function (){
       window.onpopstate = ((event) => {
         console.log(this.$route, window.history, "location: " + document.location + ", state: " + JSON.stringify(event.state));
-        this.toggleVisible()
+        this.isVisible = true
       });
+
     },
     mounted(){
 
