@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-
 import Home from "../src/components/Home";
 import TableView from "../src/components/TableView";
 import SidoTable from "../src/components/SidoTable";
+import UserList from "../src/components/UserList";
 
 Vue.use(VueRouter);
 
@@ -14,21 +14,12 @@ export const router = new VueRouter({
     routes: [
         {path: "/", redirect: "/home"},
         {path: "/home", component: Home},
+        {path: '/region', component: TableView},
+        {path: "/region/:id", name: "sido", component: SidoTable},
         {
-            path: '/region',
-            component: TableView,
-            children: [
-                {
-                    path: ":id",
-                    name: "sido",
-                    component: SidoTable
-                }
-            ]
-        },
-        // {
-        //     path: '/sido/:id',
-        //     component: SidoTable,
-        //     props: true
-        // }
+            path: "/userList",
+            name: "userList",
+            component: UserList
+        }
     ]
 });

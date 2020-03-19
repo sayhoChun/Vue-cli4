@@ -30,6 +30,7 @@
             <b-list-group-item to="/region" variant="dark">Region</b-list-group-item>
             <b-list-group-item :to="{name: 'sido', params: {id: '1'}}" variant="dark">Sido</b-list-group-item>
             <b-list-group-item v-if="this.userRegion" variant="warning">{{this.userRegion + "::" + this.userSido}}</b-list-group-item>
+            <b-list-group-item :to="{name: 'userList'}" variant="success">UserList</b-list-group-item>
         </b-list-group>
 
 

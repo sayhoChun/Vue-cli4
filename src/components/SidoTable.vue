@@ -1,5 +1,5 @@
 <template>
-    <div class="SidoTable mx-auto">
+    <div class="SidoTable mx-auto w-50">
         <b-table class="mt-3 mx-auto small" striped hover
                  :items="this.provider"
                  :fields="fields"
