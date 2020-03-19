@@ -26,7 +26,7 @@
     import CONSTANTS from "../Constants";
 
     export default {
-        name: "test",
+        name: "sidoTable",
         data() {
             return{
                 sidoBusyFlag: false,
