@@ -1,6 +1,22 @@
 <template>
     <div class="mt-3 mx-auto">
-        <b-table class="mx-auto small" striped hover id="userList"
+        <b-form inline class="mb-2" @submit="onSubmit">
+            <label class="sr-only" for="account">account</label>
+            <b-input id="account"
+                     v-model="form.searchAccount"
+                    class="mb-2 mr-sm-2 mb-sm-0"
+                    placeholder="계정"
+            >
+            </b-input>
+
+            <label class="sr-only" for="phone">phone</label>
+            <b-input id="phone"
+                     v-model="form.searchPhone"
+                     placeholder="전화번호"></b-input>
+            <b-button type="submit" class="ml-2" variant="primary">Search</b-button>
+        </b-form>
+        <b-table class="mx-auto small" striped hover
+                 id="userList"
                  :items="this.provider"
                  :fields="fields"
                  :busy.sync="isBusy"
@@ -57,7 +73,11 @@
                 ],
                 rows: 0,
                 perPage: 20,
-                currentPage: 1
+                currentPage: 1,
+                form: {
+                    searchAccount: "",
+                    searchPhone: ""
+                }
             }
         },
         methods:{
@@ -67,8 +87,8 @@
                     params: {
                         page: ctx.currentPage,
                         limit: ctx.perPage,
-                        account: '',
-                        phone: ''
+                        account: this.form.searchAccount,
+                        phone: this.form.searchPhone
                     }
                 });
                 return promise.then((res) => {
@@ -84,6 +104,12 @@
             toggleBusy(){
                 this.isBusy = !this.isBusy
             },
+            onSubmit(evt){
+                evt.preventDefault();
+                this.searchAccount = this.form.account;
+                this.searchPhone = this.form.phone;
+                this.$root.$emit('bv::refresh::table', 'userList')
+            }
         }
     }
 </script>
