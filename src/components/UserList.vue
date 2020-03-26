@@ -1,6 +1,8 @@
 <template>
     <div class="mt-3 mx-auto">
-        <b-form inline class="mb-2" @submit="onSubmit">
+        <router-view class="view"></router-view>
+
+        <b-form inline class="mt-3 mb-2" @submit="onSubmit">
             <label class="sr-only" for="account">account</label>
             <b-input id="account"
                      v-model="form.searchAccount"
@@ -25,6 +27,7 @@
                  :sort-desc.sync="sortDesc"
                  :per-page="perPage"
                  :current-page="currentPage"
+                 @row-clicked="rowClickHandler"
         >
             <template v-slot:cell(type)="data">
                 {{data.value === "M" ? "인력" : "장비"}}
@@ -109,6 +112,9 @@
                 this.searchAccount = this.form.account;
                 this.searchPhone = this.form.phone;
                 this.$root.$emit('bv::refresh::table', 'userList')
+            },
+            rowClickHandler(record){
+                this.$router.replace("/userList/detail/" + record["id"]);
             }
         }
     }

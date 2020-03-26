@@ -5,6 +5,7 @@ import Home from "../src/components/Home";
 import TableView from "../src/components/TableView";
 import SidoTable from "../src/components/SidoTable";
 import UserList from "../src/components/UserList";
+import UserDetail from "../src/components/UserDetail";
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,10 @@ export const router = new VueRouter({
         {
             path: "/userList",
             name: "userList",
-            component: UserList
+            component: UserList,
+            children: [
+                {path: "detail/:id", component: UserDetail}
+            ]
         }
     ]
 });
