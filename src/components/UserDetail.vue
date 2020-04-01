@@ -1,6 +1,11 @@
 <template>
     <div class="w-75 mt-3 mx-auto text-sm-left">
-        <b-form @submit="onSubmit">
+        <div class="text-center mb-3 justify-content-between">
+            <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner">
+            </b-spinner>
+        </div>
+
+        <b-form v-if="!this.spinnerStatus" @submit="onSubmit">
             <b-form-group id="nameGroup" label="이름" label-for="name">
                 <b-form-input id="name" v-model="form.name" required placeholder="Enter name">
                 </b-form-input>
@@ -59,6 +64,7 @@
         name: "UserDetail",
         data(){
             return {
+                spinnerStatus: true,
                 selected: [],
                 gugunList: [],
                 form: {
@@ -83,6 +89,7 @@
         },
         methods:{
             provider(id){
+                this.spinnerStatus = true;
                 let promise = axios.get(CONSTANTS.API_URL + "/web/user/info/" + id);
                 promise.then(res => {
                     this.form.name = res.data.data["name"];
@@ -92,6 +99,7 @@
                     this.form.region.forEach(item => {
                        this.selected.push([item["sidoId"], item["gugunId"]]);
                        this.gugunListProvider(idx++);
+                       this.spinnerStatus = false
                     });
                 }).catch(error => {console.log(error)});
             },
@@ -103,6 +111,7 @@
                 axios.get(CONSTANTS.API_URL + "/info/region/" + this.selected[idx][0])
                 .then(res => {
                     this.$set(this.gugunList, idx, res.data.data);
+                    return true;
                 }).catch(error => {console.log(error)});
             },
             onSubmit(evt){
