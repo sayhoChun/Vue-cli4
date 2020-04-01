@@ -2,43 +2,34 @@
     <div class="w-75 mt-3 mx-auto text-sm-left">
         <b-form @submit="onSubmit">
             <b-form-group id="nameGroup" label="이름" label-for="name">
-                <b-form-input
-                        id="name"
-                        v-model="form.name"
-                        required
-                        placeholder="Enter name"
-                ></b-form-input>
+                <b-form-input id="name" v-model="form.name" required placeholder="Enter name">
+                </b-form-input>
             </b-form-group>
 
-            <b-form-group id="regionGroup"
-                          label="Your Name:"
-                          label-for="region"
-                          description="We'll never share your email with anyone else."
-            >
+            <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="We'll never share your email with anyone else.">
                 <div v-for="(item, index) in form.region" :key="item['sidoID']">
-                    <b-form-select :id="'region' + index" class="mt-1" v-model="selected[index][0]" @change="onChange(index)">
+                    <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="selected[index][0]" @change="onChange(index)">
                         <option label="선택..." :value="null" selected></option>
                         <option v-for="region in regionList"
                                 :key="region['sidoID']"
                                 :value="region['sidoID']"
                         >{{region['abbreviation']}}</option>
                     </b-form-select>
-                    <b-form-select :id="'gugun' + index" class="mt-1" v-model="selected[index][1]">
+                    <b-form-select :id="'gugun' + index" class="mt-1 w-25 ml-3" v-model="selected[index][1]">
                         <option label="선택..." :value="null" selected></option>
                         <option v-for="gugun in gugunList[index]"
                                 :key="gugun['gugunID']"
                                 :value="gugun['gugunID']"
                         >{{gugun['description']}}</option>
                     </b-form-select>
+                    <b-button class="mt-3 ml-3" variant="danger"> - </b-button>
 <!--                    {{index}}-->
 <!--                    {{selected[index]}}-->
                 </div>
+                <b-button variant="primary"> + </b-button>
             </b-form-group>
 
-            <b-form-group id="input-group-1"
-                    label="Account"
-                    label-for="typeSelect"
-            >
+            <b-form-group id="input-group-1" label="Account" label-for="typeSelect">
                 <b-form-select
                         id="typeSelect"
                         class="mb-2 mr-sm-2 mb-sm-0"
@@ -49,6 +40,7 @@
                             {text: '구인회원', value: 'N'}
                         ]"
                         :value="this.form.type"
+                        required
                 ></b-form-select>
             </b-form-group>
 
@@ -92,21 +84,16 @@
         methods:{
             provider(id){
                 let promise = axios.get(CONSTANTS.API_URL + "/web/user/info/" + id);
-                promise.then((res) => {
+                promise.then(res => {
                     this.form.name = res.data.data["name"];
                     this.form.type = res.data.data["type"];
                     this.form.region = res.data.data["userRegion"];
                     let idx = 0;
-                    this.form.region.forEach((item) => {
+                    this.form.region.forEach(item => {
                        this.selected.push([item["sidoId"], item["gugunId"]]);
                        this.gugunListProvider(idx++);
                     });
-                }).catch(error => {
-                    console.log(error);
-                })
-            },
-            onSubmit(evt){
-                evt.preventDefault();
+                }).catch(error => {console.log(error)});
             },
             onChange(idx){
                 this.gugunListProvider(idx);
@@ -116,10 +103,11 @@
                 axios.get(CONSTANTS.API_URL + "/info/region/" + this.selected[idx][0])
                 .then(res => {
                     this.$set(this.gugunList, idx, res.data.data);
-                }).catch(error => {
-                    console.log(error);
-                })
-            }
+                }).catch(error => {console.log(error)});
+            },
+            onSubmit(evt){
+                evt.preventDefault();
+            },
         },
         computed: {
             ...mapState([
