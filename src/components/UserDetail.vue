@@ -16,27 +16,23 @@
                           description="We'll never share your email with anyone else."
             >
                 <div v-for="(item, index) in form.region" :key="item['sidoID']">
-                    <b-form-select id="region" class="mt-1" v-model="selected[index][0]">
+                    <b-form-select :id="'region' + index" class="mt-1" v-model="selected[index][0]" @change="onChange(index)">
                         <option label="선택..." :value="null" selected></option>
                         <option v-for="region in regionList"
                                 :key="region['sidoID']"
                                 :value="region['sidoID']"
                         >{{region['abbreviation']}}</option>
                     </b-form-select>
-<!--                    TODO-->
-                    <b-form-select id="gugun" class="mt-1" v-model="selected[index][1]">
+                    <b-form-select :id="'gugun' + index" class="mt-1" v-model="selected[index][1]">
                         <option label="선택..." :value="null" selected></option>
-
+                        <option v-for="gugun in gugunList[index]"
+                                :key="gugun['gugunID']"
+                                :value="gugun['gugunID']"
+                        >{{gugun['description']}}</option>
                     </b-form-select>
-                    {{index}}
-                    {{selected[index]}}
+<!--                    {{index}}-->
+<!--                    {{selected[index]}}-->
                 </div>
-
-<!--                <b-form-input class="mt-1" v-for="item in form.region" :key="item['gugunID']"-->
-<!--                        id="region"-->
-<!--                        v-model="item['gugunTxt']"-->
-<!--                        placeholder="Enter name"-->
-<!--                ></b-form-input>-->
             </b-form-group>
 
             <b-form-group id="input-group-1"
@@ -72,6 +68,7 @@
         data(){
             return {
                 selected: [],
+                gugunList: [],
                 form: {
                     id: null,
                     name: "",
@@ -99,8 +96,10 @@
                     this.form.name = res.data.data["name"];
                     this.form.type = res.data.data["type"];
                     this.form.region = res.data.data["userRegion"];
+                    let idx = 0;
                     this.form.region.forEach((item) => {
                        this.selected.push([item["sidoId"], item["gugunId"]]);
+                       this.gugunListProvider(idx++);
                     });
                 }).catch(error => {
                     console.log(error);
@@ -108,12 +107,24 @@
             },
             onSubmit(evt){
                 evt.preventDefault();
+            },
+            onChange(idx){
+                this.gugunListProvider(idx);
+                this.selected[idx][1] = null;
+            },
+            gugunListProvider(idx){
+                axios.get(CONSTANTS.API_URL + "/info/region/" + this.selected[idx][0])
+                .then(res => {
+                    this.$set(this.gugunList, idx, res.data.data);
+                }).catch(error => {
+                    console.log(error);
+                })
             }
         },
         computed: {
             ...mapState([
                 "regionList"
-            ]),
+            ])
         }
     }
 </script>
