@@ -130,13 +130,17 @@
                 evt.preventDefault();
                 console.log(JSON.stringify(this.form));
                 console.log(this.form);
-                this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify(this.form))
+                console.log(this.qs.stringify(this.form));
+                this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify({
+                    name: this.form.name,
+                    selected: JSON.stringify(this.form.selected),
+                    type: this.form.type
+                }))
                 .then(res => {
                     console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });
-
             },
         },
         computed: {
