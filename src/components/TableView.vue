@@ -23,8 +23,6 @@
 
 <script>
   import { mapState, mapGetters } from "vuex";
-  import axios from 'axios';
-  import CONSTANTS from "../Constants";
 
   export default {
     name: 'HelloWorld',
@@ -70,7 +68,7 @@
         // });
 
         this.toggleRegionBusy();
-        let promise = axios.get(CONSTANTS.API_URL + "/info/region");
+        let promise = this.$http.get(this.CONSTANTS.API_URL + "/info/region");
         return promise.then((data) => {
           console.log(data.data.data);
           this.toggleRegionBusy();

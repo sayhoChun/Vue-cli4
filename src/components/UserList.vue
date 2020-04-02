@@ -55,8 +55,6 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    import CONSTANTS from "../Constants";
     export default {
         name: "UserList",
         data(){
@@ -86,7 +84,7 @@
         methods:{
             provider(ctx){
                 this.toggleBusy();
-                let promise = axios.get(CONSTANTS.API_URL + "/admin/userList", {
+                let promise = this.$http.get(this.CONSTANTS.API_URL + "/admin/userList", {
                     params: {
                         page: ctx.currentPage,
                         limit: ctx.perPage,
@@ -115,6 +113,11 @@
             },
             rowClickHandler(record){
                 this.$router.replace("/userList/detail/" + record["id"]);
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
             }
         }
     }

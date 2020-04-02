@@ -12,26 +12,26 @@
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="We'll never share your email with anyone else.">
-                <div v-for="(item, index) in form.region" :key="item['sidoID']">
-                    <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="selected[index][0]" @change="onChange(index)">
-                        <option label="선택..." :value="null" selected></option>
+                <div v-for="(item, index) in form.regions" :key="item['sidoID']">
+                    <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="form.selected[index][0]" @change="onChange(index)" required>
+                        <option label="선택..." :value="null"></option>
                         <option v-for="region in regionList"
                                 :key="region['sidoID']"
                                 :value="region['sidoID']"
                         >{{region['abbreviation']}}</option>
                     </b-form-select>
-                    <b-form-select :id="'gugun' + index" class="mt-1 w-25 ml-3" v-model="selected[index][1]">
-                        <option label="선택..." :value="null" selected></option>
+                    <b-form-select :id="'gugun' + index" class="mt-1 w-25 ml-3" v-model="form.selected[index][1]" required>
+                        <option label="선택..." :value="null"></option>
                         <option v-for="gugun in gugunList[index]"
                                 :key="gugun['gugunID']"
                                 :value="gugun['gugunID']"
                         >{{gugun['description']}}</option>
                     </b-form-select>
-                    <b-button class="mt-3 ml-3" variant="danger"> - </b-button>
+                    <b-button class="mt-1 ml-3" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
 <!--                    {{index}}-->
 <!--                    {{selected[index]}}-->
                 </div>
-                <b-button variant="primary"> + </b-button>
+                <b-button variant="primary" @click="addNewRegion"> + </b-button>
             </b-form-group>
 
             <b-form-group id="input-group-1" label="Account" label-for="typeSelect">
@@ -44,20 +44,17 @@
                             {text: '인력회원', value: 'M'},
                             {text: '구인회원', value: 'N'}
                         ]"
-                        :value="this.form.type"
+                        v-model="form.type"
                         required
                 ></b-form-select>
             </b-form-group>
 
             <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
     </div>
 </template>
 
 <script>
-    import axios from 'axios';
-    import CONSTANTS from "../Constants";
     import {mapState} from "vuex";
 
     export default {
@@ -65,13 +62,18 @@
         data(){
             return {
                 spinnerStatus: true,
-                selected: [],
                 gugunList: [],
                 form: {
                     id: null,
                     name: "",
                     type: "",
-                    region: "",
+                    regions: [],
+                    selected: [],
+                    region: {
+                        sidoId: null,
+                        gugunId: null,
+                        userId: null
+                    }
                 }
             }
         },
@@ -90,32 +92,51 @@
         methods:{
             provider(id){
                 this.spinnerStatus = true;
-                let promise = axios.get(CONSTANTS.API_URL + "/web/user/info/" + id);
+                let promise = this.$http.get(this.CONSTANTS.API_URL + "/web/user/info/" + id);
                 promise.then(res => {
                     this.form.name = res.data.data["name"];
                     this.form.type = res.data.data["type"];
-                    this.form.region = res.data.data["userRegion"];
+                    this.form.regions = res.data.data["userRegion"];
+                    console.log(this.form.regions);
                     let idx = 0;
-                    this.form.region.forEach(item => {
-                       this.selected.push([item["sidoId"], item["gugunId"]]);
+                    this.form.regions.forEach(item => {
+                       this.form.selected.push([item["sidoId"], item["gugunId"]]);
                        this.gugunListProvider(idx++);
-                       this.spinnerStatus = false
                     });
+                    this.spinnerStatus = false
                 }).catch(error => {console.log(error)});
             },
             onChange(idx){
                 this.gugunListProvider(idx);
-                this.selected[idx][1] = null;
+                this.form.selected[idx][1] = null;
             },
             gugunListProvider(idx){
-                axios.get(CONSTANTS.API_URL + "/info/region/" + this.selected[idx][0])
+                this.$http.get(this.CONSTANTS.API_URL + "/info/region/" + this.form.selected[idx][0])
                 .then(res => {
                     this.$set(this.gugunList, idx, res.data.data);
                     return true;
                 }).catch(error => {console.log(error)});
             },
+            addNewRegion(){
+                this.form.regions.push(this.Vue.util.extend({}, this.form.region));
+                this.form.selected.push([null, null]);
+            },
+            removeCurrentRegion(index){
+                const removeItem = (items, idx) => items.slice(0, idx).concat(items.slice(idx + 1, items.length));
+                this.form.regions = removeItem(this.form.regions, index);
+                this.form.selected = removeItem(this.form.selected, index);
+            },
             onSubmit(evt){
                 evt.preventDefault();
+                console.log(JSON.stringify(this.form));
+                console.log(this.form);
+                this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify(this.form))
+                .then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                });
+
             },
         },
         computed: {

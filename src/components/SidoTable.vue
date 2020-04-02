@@ -22,8 +22,6 @@
 
 <script>
     import {mapState} from "vuex";
-    import axios from 'axios';
-    import CONSTANTS from "../Constants";
 
     export default {
         name: "sidoTable",
@@ -59,7 +57,7 @@
         methods: {
             provider(){
                 this.toggleBusy();
-                let promise = axios.get(CONSTANTS.API_URL + "/info/region/" + this.$route.params.id);
+                let promise = this.$http.get(this.CONSTANTS.API_URL + "/info/region/" + this.$route.params.id);
                 return promise.then((res) => {
                     this.toggleBusy();
                     return res.data.data
