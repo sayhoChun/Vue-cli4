@@ -28,8 +28,6 @@
                         >{{gugun['description']}}</option>
                     </b-form-select>
                     <b-button class="mt-1 ml-3" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
-<!--                    {{index}}-->
-<!--                    {{selected[index]}}-->
                 </div>
                 <b-button variant="primary" @click="addNewRegion"> + </b-button>
             </b-form-group>
@@ -131,6 +129,7 @@
                 console.log(JSON.stringify(this.form));
                 console.log(this.form);
                 console.log(this.qs.stringify(this.form));
+                //TODO
                 this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify({
                     name: this.form.name,
                     selected: JSON.stringify(this.form.selected),
