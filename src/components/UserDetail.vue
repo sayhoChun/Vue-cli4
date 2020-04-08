@@ -1,14 +1,15 @@
 <template>
     <div class="w-75 mt-3 mx-auto text-sm-left">
         <div class="text-center mb-3 justify-content-between">
-            <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner">
-            </b-spinner>
+            <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"></b-spinner>
         </div>
-
         <b-form v-if="!this.spinnerStatus" @submit="onSubmit">
             <b-form-group id="nameGroup" label="이름" label-for="name">
-                <b-form-input id="name" v-model="form.name" required placeholder="Enter name">
-                </b-form-input>
+                <b-form-input id="name" v-model="form.name" required placeholder="Enter name"></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="phoneGroup" label="전화번호" label-for="userPhone">
+                <b-form-input id="userPhone" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="We'll never share your email with anyone else.">
@@ -64,6 +65,7 @@
                 form: {
                     id: null,
                     name: "",
+                    phone: null,
                     type: "",
                     regions: [],
                     selected: [],
@@ -95,7 +97,7 @@
                     this.form.name = res.data.data["name"];
                     this.form.type = res.data.data["type"];
                     this.form.regions = res.data.data["userRegion"];
-                    console.log(this.form.regions);
+                    this.form.phone = res.data.data["phone"];
                     let idx = 0;
                     this.form.regions.forEach(item => {
                        this.form.selected.push([item["sidoId"], item["gugunId"]]);
@@ -126,21 +128,29 @@
             },
             onSubmit(evt){
                 evt.preventDefault();
-                console.log(JSON.stringify(this.form));
-                console.log(this.form);
-                console.log(this.qs.stringify(this.form));
-                //TODO
                 this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify({
                     name: this.form.name,
+                    phone: this.form.phone,
                     selected: JSON.stringify(this.form.selected),
                     type: this.form.type
                 }))
                 .then(res => {
-                    console.log(res);
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
+                    if(res.data["returnCode"] === 1){
+                        this.$swal({
+                            icon: "success",
+                            title: "Success",
+                            text: "저장되었습니다."
+                        })
+                    }
+                    else{
+                        this.$swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: res.data["returnMessage"]
+                        });
+                    }
+                }).catch(err => {console.log(err)});
+            }
         },
         computed: {
             ...mapState([
