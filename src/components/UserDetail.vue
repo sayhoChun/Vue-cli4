@@ -8,8 +8,8 @@
                 <b-form-input id="name" v-model="form.name" required placeholder="Enter name"></b-form-input>
             </b-form-group>
 
-            <b-form-group id="phoneGroup" label="전화번호" label-for="userPhone">
-                <b-form-input id="userPhone" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
+            <b-form-group id="phoneGroup" label="전화번호" label-for="userPhone" description="- 없이 입력해주시기 바랍니다.">
+                <b-form-input id="userPhone" type="number" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="We'll never share your email with anyone else.">
@@ -48,7 +48,10 @@
                 ></b-form-select>
             </b-form-group>
 
-            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button type="submit" variant="primary">
+                <b-spinner small v-if="submitBtnSpinnerStat" variant="success"></b-spinner>
+                Submit
+            </b-button>
         </b-form>
     </div>
 </template>
@@ -74,7 +77,8 @@
                         gugunId: null,
                         userId: null
                     }
-                }
+                },
+                submitBtnSpinnerStat: false
             }
         },
         mounted() {
@@ -128,6 +132,7 @@
             },
             onSubmit(evt){
                 evt.preventDefault();
+                this.submitBtnSpinnerStat = true;
                 this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify({
                     name: this.form.name,
                     phone: this.form.phone,
@@ -149,6 +154,7 @@
                             text: res.data["returnMessage"]
                         });
                     }
+                    this.submitBtnSpinnerStat = false;
                 }).catch(err => {console.log(err)});
             }
         },
