@@ -12,7 +12,7 @@
                 <b-form-input id="userPhone" type="number" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
             </b-form-group>
 
-            <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="We'll never share your email with anyone else.">
+            <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="복수 지역 선택 가능">
                 <div v-for="(item, index) in form.regions" :key="item['sidoID']">
                     <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="form.selected[index][0]" @change="onChange(index)" required>
                         <option label="선택..." :value="null"></option>
@@ -94,19 +94,23 @@
             }
         },
         methods:{
+            render(res){
+                this.form.name = res.data.data["name"];
+                this.form.type = res.data.data["type"];
+                this.form.regions = res.data.data["userRegion"];
+                this.form.phone = res.data.data["phone"];
+                let idx = 0;
+                this.form.selected = [];
+                this.form.regions.forEach(item => {
+                    this.form.selected.push([item["sidoId"], item["gugunId"]]);
+                    this.gugunListProvider(idx++);
+                });
+            },
             provider(id){
                 this.spinnerStatus = true;
                 let promise = this.$http.get(this.CONSTANTS.API_URL + "/web/user/info/" + id);
                 promise.then(res => {
-                    this.form.name = res.data.data["name"];
-                    this.form.type = res.data.data["type"];
-                    this.form.regions = res.data.data["userRegion"];
-                    this.form.phone = res.data.data["phone"];
-                    let idx = 0;
-                    this.form.regions.forEach(item => {
-                       this.form.selected.push([item["sidoId"], item["gugunId"]]);
-                       this.gugunListProvider(idx++);
-                    });
+                    this.render(res);
                     this.spinnerStatus = false
                 }).catch(error => {console.log(error)});
             },
@@ -141,6 +145,7 @@
                 }))
                 .then(res => {
                     if(res.data["returnCode"] === 1){
+                        this.render(res);
                         this.$swal({
                             icon: "success",
                             title: "Success",
@@ -148,14 +153,24 @@
                         })
                     }
                     else{
-                        this.$swal.fire({
+                        this.$swal({
                             icon: "error",
                             title: "Oops...",
                             text: res.data["returnMessage"]
+                        }).then(res => {
+                            if(res.value) this.$router.go(0);
                         });
                     }
                     this.submitBtnSpinnerStat = false;
-                }).catch(err => {console.log(err)});
+                }).catch(err => {
+                    this.$swal({
+                        icon: "error",
+                        title: "Oops ...",
+                        text: err
+                    }).then(res => {
+                        if(res.value) this.$router.go(0);
+                    });
+                });
             }
         },
         computed: {
