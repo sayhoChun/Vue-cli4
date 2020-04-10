@@ -13,27 +13,25 @@
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="복수 지역 선택 가능">
-                <div v-for="(item, index) in form.regions" :key="item['sidoID']">
+                <div v-for="(item, index) in form.userRegion" :key="item['sidoID']">
                     <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="form.selected[index][0]" @change="onChange(index)" required>
                         <option label="선택..." :value="null"></option>
-                        <option v-for="region in regionList"
-                                :key="region['sidoID']"
-                                :value="region['sidoID']"
-                        >{{region['abbreviation']}}</option>
+                        <option v-for="region in regionList" :key="region['sidoID']" :value="region['sidoID']">
+                            {{region['abbreviation']}}
+                        </option>
                     </b-form-select>
                     <b-form-select :id="'gugun' + index" class="mt-1 w-25 ml-3" v-model="form.selected[index][1]" required>
                         <option label="선택..." :value="null"></option>
-                        <option v-for="gugun in gugunList[index]"
-                                :key="gugun['gugunID']"
-                                :value="gugun['gugunID']"
-                        >{{gugun['description']}}</option>
+                        <option v-for="gugun in gugunList[index]" :key="gugun['gugunID']" :value="gugun['gugunID']">
+                            {{gugun['description']}}
+                        </option>
                     </b-form-select>
                     <b-button class="mt-1 ml-3" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
                 </div>
                 <b-button variant="primary" @click="addNewRegion"> + </b-button>
             </b-form-group>
 
-            <b-form-group id="input-group-1" label="Account" label-for="typeSelect">
+            <b-form-group id="input-group-1" label-cols-sm="2" label-cols-lg="3" label="회원 타입" label-for="typeSelect">
                 <b-form-select
                         id="typeSelect"
                         class="mb-2 mr-sm-2 mb-sm-0"
@@ -46,6 +44,10 @@
                         v-model="form.type"
                         required
                 ></b-form-select>
+            </b-form-group>
+
+            <b-form-group id="pushFlagGroup" label-cols-sm="2" label-cols-lg="3" label="알림 수신 여부" label-for="pushFlag">
+                <b-form-checkbox id="pushFlag" class="mt-1" v-model="form.pushFlag" name="check-button" switch size="lg"></b-form-checkbox>
             </b-form-group>
 
             <b-button type="submit" variant="primary">
@@ -70,13 +72,14 @@
                     name: "",
                     phone: null,
                     type: "",
-                    regions: [],
+                    userRegion: [],
                     selected: [],
                     region: {
                         sidoId: null,
                         gugunId: null,
                         userId: null
-                    }
+                    },
+                    pushFlag: null
                 },
                 submitBtnSpinnerStat: false
             }
@@ -95,13 +98,11 @@
         },
         methods:{
             render(res){
-                this.form.name = res.data.data["name"];
-                this.form.type = res.data.data["type"];
-                this.form.regions = res.data.data["userRegion"];
-                this.form.phone = res.data.data["phone"];
+                this.form = res.data.data;
+                this.form.pushFlag = res.data.data["pushFlag"] === 1;
                 let idx = 0;
                 this.form.selected = [];
-                this.form.regions.forEach(item => {
+                this.form.userRegion.forEach(item => {
                     this.form.selected.push([item["sidoId"], item["gugunId"]]);
                     this.gugunListProvider(idx++);
                 });
@@ -126,12 +127,12 @@
                 }).catch(error => {console.log(error)});
             },
             addNewRegion(){
-                this.form.regions.push(this.Vue.util.extend({}, this.form.region));
+                this.form.userRegion.push(this.Vue.util.extend({}, this.form.region));
                 this.form.selected.push([null, null]);
             },
             removeCurrentRegion(index){
                 const removeItem = (items, idx) => items.slice(0, idx).concat(items.slice(idx + 1, items.length));
-                this.form.regions = removeItem(this.form.regions, index);
+                this.form.userRegion = removeItem(this.form.userRegion, index);
                 this.form.selected = removeItem(this.form.selected, index);
             },
             onSubmit(evt){
@@ -141,7 +142,8 @@
                     name: this.form.name,
                     phone: this.form.phone,
                     selected: JSON.stringify(this.form.selected),
-                    type: this.form.type
+                    type: this.form.type,
+                    pushFlag: this.form.pushFlag === true ? 1 : 0
                 }))
                 .then(res => {
                     if(res.data["returnCode"] === 1){
