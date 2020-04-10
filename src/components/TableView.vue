@@ -68,7 +68,7 @@
         // });
 
         this.toggleRegionBusy();
-        let promise = this.$http.get(this.CONSTANTS.API_URL + "/info/region");
+        let promise = this.$http.get(`${this.CONSTANTS.API_URL}/info/region`);
         return promise.then((data) => {
           console.log(data.data.data);
           this.toggleRegionBusy();
@@ -87,7 +87,7 @@
       regionClickHandler(record){
         this.toggleVisible();
         this.$store.commit("setUserRegion", record["sidoID"]);
-        this.$router.push("/region/" + record["sidoID"]);
+        this.$router.push(`/region/${record["sidoID"]}`);
       }
     },
     computed: {

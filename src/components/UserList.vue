@@ -84,7 +84,7 @@
         methods:{
             provider(ctx){
                 this.toggleBusy();
-                let promise = this.$http.get(this.CONSTANTS.API_URL + "/admin/userList", {
+                let promise = this.$http.get(`${this.CONSTANTS.API_URL}/admin/userList`, {
                     params: {
                         page: ctx.currentPage,
                         limit: ctx.perPage,
@@ -96,10 +96,12 @@
                     this.toggleBusy();
                     this.rows = res.data.data["pageInfo"]["totalRow"];
                     return res.data.data.list;
-                }).catch(error => {
-                    alert("error");
-                    console.log(error);
-                    return [];
+                }).catch(err => {
+                    this.$swal({
+                        icon: "error",
+                        title: "Oops ...",
+                        text: err
+                    }).then(res => {if(res) return []});
                 })
             },
             toggleBusy(){
@@ -107,12 +109,11 @@
             },
             onSubmit(evt){
                 evt.preventDefault();
-                this.searchAccount = this.form.account;
-                this.searchPhone = this.form.phone;
                 this.$root.$emit('bv::refresh::table', 'userList')
             },
             rowClickHandler(record){
-                this.$router.replace("/userList/detail/" + record["id"]);
+                const path = `/userList/detail/${record["id"]}`;
+                if(this.$route.path !== path) this.$router.push(path);
                 window.scrollTo({
                     top: 0,
                     left: 0,

@@ -57,7 +57,7 @@
         methods: {
             provider(){
                 this.toggleBusy();
-                let promise = this.$http.get(this.CONSTANTS.API_URL + "/info/region/" + this.$route.params.id);
+                let promise = this.$http.get(`${this.CONSTANTS.API_URL}/info/region/${this.$route.params.id}`);
                 return promise.then((res) => {
                     this.toggleBusy();
                     return res.data.data

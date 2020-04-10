@@ -109,7 +109,7 @@
             },
             provider(id){
                 this.spinnerStatus = true;
-                let promise = this.$http.get(this.CONSTANTS.API_URL + "/web/user/info/" + id);
+                let promise = this.$http.get(`${this.CONSTANTS.API_URL}/web/user/info/${id}`);
                 promise.then(res => {
                     this.render(res);
                     this.spinnerStatus = false
@@ -120,7 +120,7 @@
                 this.form.selected[idx][1] = null;
             },
             gugunListProvider(idx){
-                this.$http.get(this.CONSTANTS.API_URL + "/info/region/" + this.form.selected[idx][0])
+                this.$http.get( `${this.CONSTANTS.API_URL}/info/region/${this.form.selected[idx][0]}`)
                 .then(res => {
                     this.$set(this.gugunList, idx, res.data.data);
                     return true;
@@ -138,7 +138,7 @@
             onSubmit(evt){
                 evt.preventDefault();
                 this.submitBtnSpinnerStat = true;
-                this.$http.post(this.CONSTANTS.API_URL + "/dummy/user/update/info/" + this.form.id, this.qs.stringify({
+                this.$http.post(`${this.CONSTANTS.API_URL}/dummy/user/update/info/${this.form.id}`, this.qs.stringify({
                     name: this.form.name,
                     phone: this.form.phone,
                     selected: JSON.stringify(this.form.selected),
