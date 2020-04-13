@@ -45,7 +45,6 @@
         console.log(this.$route, window.history, "location: " + document.location + ", state: " + JSON.stringify(event.state));
         this.isVisible = true
       });
-
     },
     mounted(){
 

@@ -22,7 +22,7 @@ export const router = new VueRouter({
             name: "userList",
             component: UserList,
             children: [
-                {path: "detail/:id", component: UserDetail}
+                {path: "detail/:id", name: "userDetail", component: UserDetail}
             ]
         }
     ]

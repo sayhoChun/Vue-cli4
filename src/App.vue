@@ -1,14 +1,18 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <Header/>
+    <img alt="Vue logo" src="./assets/logo.png" class="mt-5">
     <router-view class="view"></router-view>
   </div>
 </template>
 
 <script>
+  import Header from "./components/mixin/Header";
+
 export default {
   name: 'App',
   components: {
+    Header
   },
   created() {
   },

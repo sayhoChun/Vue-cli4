@@ -81,6 +81,21 @@
                 }
             }
         },
+        mounted() {
+            if(!this.$store.getters.isLoggedIn){
+                this.$swal({
+                    title: 'Error',
+                    text: "로그인 후 이용 바랍니다.",
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                }).then((result) => {
+                    if(result.value){
+                        this.$router.push("/");
+                    }
+                })
+            }
+        },
         methods:{
             provider(ctx){
                 this.toggleBusy();
