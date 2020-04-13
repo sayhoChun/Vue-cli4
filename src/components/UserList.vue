@@ -87,6 +87,7 @@
                     title: 'Error',
                     text: "로그인 후 이용 바랍니다.",
                     icon: 'warning',
+                    backdrop: "#696969",
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                 }).then((result) => {
