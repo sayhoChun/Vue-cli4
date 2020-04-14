@@ -84,7 +84,6 @@
         mounted() {
             if(!this.$store.getters.isLoggedIn){
                 this.$swal({
-                    title: 'Error',
                     text: "로그인 후 이용 바랍니다.",
                     icon: 'warning',
                     backdrop: "#696969",

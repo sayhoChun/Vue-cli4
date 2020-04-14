@@ -59,7 +59,14 @@ export default new Vuex.Store({
         },
         login: ({commit, /*state*/}, payload) => {
             return axios.post(`${CONSTANTS.API_URL}/web/user/login`, qs.stringify(payload))
-                .then(res => commit("setToken", res.data.data));
+                .then(res => {
+                    if(res.data["returnCode"] === 1){
+                        commit("setToken", res.data.data);
+                        return true;
+                    }
+                    else return false;
+                })
+                .catch(err => console.error(err));
         },
         logout: ({commit}) => {
             commit("logout");
