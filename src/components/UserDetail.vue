@@ -8,6 +8,10 @@
                 <b-form-input id="name" v-model="form.name" required placeholder="Enter name"></b-form-input>
             </b-form-group>
 
+            <b-form-group id="accountGroup" label="계정" label-for="account">
+                <b-form-input id="accunt" v-model="form.account" required placeholder="Enter account"></b-form-input>
+            </b-form-group>
+
             <b-form-group id="phoneGroup" label="전화번호" label-for="userPhone" description="- 없이 입력해주시기 바랍니다.">
                 <b-form-input id="userPhone" type="number" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
             </b-form-group>
@@ -69,6 +73,7 @@
                 gugunList: [],
                 form: {
                     id: null,
+                    account: null,
                     name: "",
                     phone: null,
                     type: "",
@@ -140,6 +145,7 @@
                 this.submitBtnSpinnerStat = true;
                 this.$http.post(`${this.CONSTANTS.API_URL}/dummy/user/update/info/${this.form.id}`, this.qs.stringify({
                     name: this.form.name,
+                    account: this.form.account,
                     phone: this.form.phone,
                     selected: JSON.stringify(this.form.selected),
                     type: this.form.type,
