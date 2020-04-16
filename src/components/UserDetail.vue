@@ -1,5 +1,5 @@
 <template>
-    <div class="w-75 mt-3 mx-auto text-sm-left">
+    <div class="w-75 mt-3 mx-auto mb-5 text-sm-left">
         <div class="text-center mb-3 justify-content-between">
             <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"></b-spinner>
         </div>
@@ -35,7 +35,7 @@
                 <b-button variant="primary" @click="addNewRegion"> + </b-button>
             </b-form-group>
 
-            <b-form-group id="input-group-1" label-cols-sm="2" label-cols-lg="3" label="회원 타입" label-for="typeSelect">
+            <b-form-group id="input-group-1" label-cols-sm="1" label-cols-lg="2" label="회원 타입" label-for="typeSelect">
                 <b-form-select
                         id="typeSelect"
                         class="mb-2 mr-sm-2 mb-sm-0"
@@ -50,14 +50,17 @@
                 ></b-form-select>
             </b-form-group>
 
-            <b-form-group id="pushFlagGroup" label-cols-sm="2" label-cols-lg="3" label="알림 수신 여부" label-for="pushFlag">
+            <b-form-group id="pushFlagGroup" label-cols-sm="1" label-cols-lg="2" label="알림 수신 여부" label-for="pushFlag">
                 <b-form-checkbox id="pushFlag" class="mt-1" v-model="form.pushFlag" name="check-button" switch size="lg"></b-form-checkbox>
+                <b-button class="float-right" type="submit" variant="success">
+                    <b-spinner small v-if="submitBtnSpinnerStat" variant="success"></b-spinner>
+                    Submit
+                </b-button>
             </b-form-group>
 
-            <b-button type="submit" variant="primary">
-                <b-spinner small v-if="submitBtnSpinnerStat" variant="success"></b-spinner>
-                Submit
-            </b-button>
+
+
+
         </b-form>
     </div>
 </template>
