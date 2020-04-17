@@ -5,16 +5,17 @@
         <b-form inline class="mt-3 mb-2" @submit="onSubmit">
             <label class="sr-only" for="account">account</label>
             <b-input id="account"
+                     class="mb-2 mr-sm-2 mb-sm-0"
                      v-model="form.searchAccount"
-                    class="mb-2 mr-sm-2 mb-sm-0"
                     placeholder="계정"
-            >
-            </b-input>
+            ></b-input>
 
             <label class="sr-only" for="phone">phone</label>
             <b-input id="phone"
+                     class="mb-2 mr-sm-2 mb-sm-0"
                      v-model="form.searchPhone"
-                     placeholder="전화번호"></b-input>
+                     placeholder="전화번호"
+            ></b-input>
             <b-button type="submit" class="ml-2" variant="primary">Search</b-button>
         </b-form>
         <b-table class="mx-auto small" striped hover
@@ -28,7 +29,7 @@
                  :per-page="perPage"
                  :current-page="currentPage"
                  @row-clicked="rowClickHandler"
-                 responsive="md"
+                 fixed responsive="md"
         >
             <template v-slot:cell(type)="data">
                 {{data.value === "M" ? "인력" : "장비"}}
@@ -65,13 +66,13 @@
                 sortDesc: false,
                 primaryKey: "id",
                 fields: [
-                    {key: "id", sortable: true},
-                    {key: "account", label: "계정", sortable: true},
-                    {key: "name", label: "이름", sortable: true},
-                    {key: "age", label: "나이",sortable: true},
-                    {key: "phone", label: "전화번호",sortable: false},
-                    {key: "type", label: "가입유형",sortable: false},
-                    {key: "formattedDate", label: "등록일시",sortable: true}
+                    {key: "id", sortable: true, thStyle: {width: "3rem"}},
+                    {key: "account", label: "계정", sortable: true, thStyle: {width: "7rem"}},
+                    {key: "name", label: "이름", sortable: true, thStyle: {width: "7rem"}},
+                    {key: "age", label: "나이",sortable: true, thStyle: {width: "4rem"}},
+                    {key: "phone", label: "전화번호",sortable: false, thStyle: {width: "7rem"}},
+                    {key: "type", label: "가입유형",sortable: false, thStyle: {width: "5rem"}},
+                    {key: "formattedDate", label: "등록일시",sortable: true, thStyle: {width: "10rem"}}
                 ],
                 rows: 0,
                 perPage: 20,

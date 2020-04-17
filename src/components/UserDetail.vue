@@ -17,7 +17,7 @@
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="복수 지역 선택 가능">
-                <div v-for="(item, index) in form.userRegion" :key="item['sidoID']">
+                <div class="mb-1" v-for="(item, index) in form.userRegion" :key="item['sidoID']">
                     <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="form.selected[index][0]" @change="onChange(index)" required>
                         <option label="선택..." :value="null"></option>
                         <option v-for="region in regionList" :key="region['sidoID']" :value="region['sidoID']">
@@ -32,7 +32,7 @@
                     </b-form-select>
                     <b-button class="mt-1 ml-3" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
                 </div>
-                <b-button variant="primary" @click="addNewRegion"> + </b-button>
+                <b-button variant="primary" class="mt-sm-2" @click="addNewRegion"> + </b-button>
             </b-form-group>
 
             <b-form-group id="input-group-1" label-cols-sm="1" label-cols-lg="2" label="회원 타입" label-for="typeSelect">
