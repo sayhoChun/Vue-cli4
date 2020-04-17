@@ -1,41 +1,53 @@
 <template>
-    <div class="w-75 mt-3 mx-auto mb-5 text-sm-left">
+    <b-container fluid="sm" class="mt-3 mx-auto mb-5 text-sm-left">
         <div class="text-center mb-3 justify-content-between">
-            <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"></b-spinner>
+            <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"/>
         </div>
         <b-form v-if="!this.spinnerStatus" @submit="onSubmit">
             <b-form-group id="nameGroup" label="이름" label-for="name">
-                <b-form-input id="name" v-model="form.name" required placeholder="Enter name"></b-form-input>
+                <b-form-input id="name" v-model="form.name" required placeholder="Enter name"/>
             </b-form-group>
 
             <b-form-group id="accountGroup" label="계정" label-for="account">
-                <b-form-input id="accunt" v-model="form.account" required placeholder="Enter account"></b-form-input>
+                <b-form-input id="accunt" v-model="form.account" required placeholder="Enter account"/>
             </b-form-group>
 
             <b-form-group id="phoneGroup" label="전화번호" label-for="userPhone" description="- 없이 입력해주시기 바랍니다.">
-                <b-form-input id="userPhone" type="number" v-model="form.phone" required placeholder="Enter phone number"></b-form-input>
+                <b-form-input id="userPhone" type="number" v-model="form.phone" required placeholder="Enter phone number"/>
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="복수 지역 선택 가능">
-                <div class="mb-1" v-for="(item, index) in form.userRegion" :key="item['sidoID']">
-                    <b-form-select :id="'region' + index" class="mt-1 w-25" v-model="form.selected[index][0]" @change="onChange(index)" required>
-                        <option label="선택..." :value="null"></option>
-                        <option v-for="region in regionList" :key="region['sidoID']" :value="region['sidoID']">
-                            {{region['abbreviation']}}
-                        </option>
-                    </b-form-select>
-                    <b-form-select :id="'gugun' + index" class="mt-1 w-25 ml-3" v-model="form.selected[index][1]" required>
-                        <option label="선택..." :value="null"></option>
-                        <option v-for="gugun in gugunList[index]" :key="gugun['gugunID']" :value="gugun['gugunID']">
-                            {{gugun['description']}}
-                        </option>
-                    </b-form-select>
-                    <b-button class="mt-1 ml-3" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
-                </div>
+                <b-container class="mb-1" v-for="(item, index) in form.userRegion" :key="item['sidoID']">
+                    <b-row>
+                        <b-col cols="5" md="3" class="p-1">
+                            <b-form-select class="mt-1"
+                                           :id="`region${index}`"
+                                           v-model="form.selected[index][0]"
+                                           @change="onChange(index)" required
+                            >
+                                <option label="시/도 선택..." :value="null"/>
+                                <option v-for="region in regionList" :key="region['sidoID']" :value="region['sidoID']">
+                                    {{region['abbreviation']}}
+                                </option>
+                            </b-form-select>
+                        </b-col>
+                        <b-col cols="5" md="3" class="p-1">
+                            <b-form-select :id="`gugun${index}`" class="mt-1" v-model="form.selected[index][1]" required>
+                                <option label="구/군 선택..." :value="null"/>
+                                <option v-for="gugun in gugunList[index]" :key="gugun['gugunID']" :value="gugun['gugunID']">
+                                    {{gugun['description']}}
+                                </option>
+                            </b-form-select>
+                        </b-col>
+                        <b-col cols="2" md="6" class="p-1">
+                            <b-button class="mt-1" variant="danger" @click="removeCurrentRegion(index)"> - </b-button>
+                        </b-col>
+                    </b-row>
+                </b-container>
                 <b-button variant="primary" class="mt-sm-2" @click="addNewRegion"> + </b-button>
             </b-form-group>
 
-            <b-form-group id="input-group-1" label-cols-sm="1" label-cols-lg="2" label="회원 타입" label-for="typeSelect">
+            <b-form-group id="input-group-1" label-cols="3" label-cols-lg="1" label="회원 타입" label-for="typeSelect">
                 <b-form-select
                         id="typeSelect"
                         class="mb-2 mr-sm-2 mb-sm-0"
@@ -47,22 +59,19 @@
                         ]"
                         v-model="form.type"
                         required
-                ></b-form-select>
+                />
             </b-form-group>
 
-            <b-form-group id="pushFlagGroup" label-cols-sm="1" label-cols-lg="2" label="알림 수신 여부" label-for="pushFlag">
-                <b-form-checkbox id="pushFlag" class="mt-1" v-model="form.pushFlag" name="check-button" switch size="lg"></b-form-checkbox>
-                <b-button class="float-right" type="submit" variant="success">
-                    <b-spinner small v-if="submitBtnSpinnerStat" variant="success"></b-spinner>
-                    Submit
-                </b-button>
+            <b-form-group id="pushFlagGroup" label-cols="3" label-cols-lg="1" label="알림 수신" label-for="pushFlag">
+                <b-form-checkbox id="pushFlag" class="mt-1" v-model="form.pushFlag" name="check-button" switch size="lg"/>
             </b-form-group>
 
-
-
-
+            <b-button type="submit" variant="success">
+                <b-spinner small v-if="submitBtnSpinnerStat" variant="success"/>
+                Submit
+            </b-button>
         </b-form>
-    </div>
+    </b-container>
 </template>
 
 <script>

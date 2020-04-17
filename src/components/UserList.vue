@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-3 mx-auto">
+    <b-container fluid="sm" class="mt-3 mx-auto">
         <router-view class="view"></router-view>
 
         <b-form inline class="mt-3 mb-2" @submit="onSubmit">
@@ -52,8 +52,9 @@
                 prev-text="<"
                 next-text=">"
                 last-text="Last"
+                size="sm"
         ></b-pagination>
-    </div>
+    </b-container>
 </template>
 
 <script>
