@@ -171,6 +171,7 @@
                             title: "Success",
                             text: "저장되었습니다."
                         })
+                        this.$root.$emit('bv::refresh::table', 'userList')
                     }
                     else{
                         this.$swal({

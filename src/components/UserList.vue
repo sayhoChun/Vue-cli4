@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="sm" class="mt-3 mx-auto">
+    <b-container fluid="md" class="mt-3 mx-auto">
         <router-view class="view"></router-view>
 
         <b-form inline class="mt-3 mb-2" @submit="onSubmit">
@@ -29,7 +29,7 @@
                  :per-page="perPage"
                  :current-page="currentPage"
                  @row-clicked="rowClickHandler"
-                 fixed responsive="sm"
+                 fixed responsive="md"
         >
             <template v-slot:cell(type)="data">
                 {{data.value === "M" ? "인력" : "장비"}}
@@ -37,7 +37,7 @@
 
             <template v-slot:table-busy>
                 <div class="text-center text-primary my-2">
-                    <b-spinner class="align-middle"></b-spinner>
+                    <b-spinner class="align-middle"/>
                     <strong> Loading...</strong>
                 </div>
             </template>
@@ -53,7 +53,7 @@
                 next-text=">"
                 last-text="Last"
                 size="sm"
-        ></b-pagination>
+        />
     </b-container>
 </template>
 
@@ -68,12 +68,12 @@
                 primaryKey: "id",
                 fields: [
                     {key: "id", sortable: true, thStyle: {width: "3rem"}},
-                    {key: "account", label: "계정", sortable: true, thStyle: {width: "7rem"}},
-                    {key: "name", label: "이름", sortable: true, thStyle: {width: "7rem"}},
-                    {key: "age", label: "나이",sortable: true, thStyle: {width: "4rem"}},
-                    {key: "phone", label: "전화번호",sortable: false, thStyle: {width: "7rem"}},
-                    {key: "type", label: "가입유형",sortable: false, thStyle: {width: "5rem"}},
-                    {key: "formattedDate", label: "등록일시",sortable: true, thStyle: {width: "10rem"}}
+                    {key: "account", label: "계정", sortable: true, thStyle: {width: "7rem"},},
+                    {key: "name", label: "이름", sortable: true, thStyle: {width: "7rem"},},
+                    {key: "age", label: "나이",sortable: true, thStyle: {width: "4rem"},},
+                    {key: "phone", label: "전화번호",sortable: false, thStyle: {width: "7rem"},},
+                    {key: "type", label: "가입유형",sortable: false, thStyle: {width: "5rem"},},
+                    {key: "formattedDate", label: "등록일시",sortable: true, thStyle: {width: "10rem"},}
                 ],
                 rows: 0,
                 perPage: 20,
@@ -143,4 +143,5 @@
 </script>
 
 <style scoped>
+
 </style>

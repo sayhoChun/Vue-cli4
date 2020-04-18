@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="sm" class="mx-auto">
+    <b-container fluid="md" class="mx-auto">
         <b-list-group>
             <b-list-group-item>
                 count
