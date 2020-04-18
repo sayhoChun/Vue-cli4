@@ -1,5 +1,5 @@
 <template>
-    <div class="SidoTable mx-auto w-50">
+    <b-container fluid="sm" class="SidoTable mx-auto">
         <b-table class="mt-3 mx-auto small" striped hover
                  :items="this.provider"
                  :fields="fields"
@@ -17,7 +17,7 @@
                 </div>
             </template>
         </b-table>
-    </div>
+    </b-container>
 </template>
 
 <script>

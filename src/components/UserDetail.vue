@@ -17,7 +17,7 @@
             </b-form-group>
 
             <b-form-group id="regionGroup" label="지역 선택" label-for="region" description="복수 지역 선택 가능">
-                <b-container class="mb-1" v-for="(item, index) in form.userRegion" :key="item['sidoID']">
+                <b-container fluid="sm" class="mb-1" v-for="(item, index) in form.userRegion" :key="item['sidoID']">
                     <b-row>
                         <b-col cols="5" md="3" class="p-1">
                             <b-form-select class="mt-1"
@@ -202,5 +202,4 @@
 </script>
 
 <style scoped>
-
 </style>

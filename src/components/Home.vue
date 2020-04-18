@@ -1,5 +1,5 @@
 <template>
-    <div class="w-75 mx-auto">
+    <b-container fluid="sm" class="mx-auto">
         <b-list-group>
             <b-list-group-item>
                 count
@@ -32,9 +32,7 @@
             <b-list-group-item v-if="this.userRegion" variant="warning">{{this.userRegion + "::" + this.userSido}}</b-list-group-item>
             <b-list-group-item :to="{name: 'userList'}" variant="success">UserList</b-list-group-item>
         </b-list-group>
-
-
-    </div>
+    </b-container>
 </template>
 
 <script>

@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
+  <b-container fluid="sm" id="app">
     <Header/>
     <img alt="Vue logo" src="./assets/logo.png" class="mt-5">
     <router-view class="view"></router-view>
-  </div>
+  </b-container>
 </template>
 
 <script>

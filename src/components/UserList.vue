@@ -29,7 +29,7 @@
                  :per-page="perPage"
                  :current-page="currentPage"
                  @row-clicked="rowClickHandler"
-                 fixed responsive="md"
+                 fixed responsive="sm"
         >
             <template v-slot:cell(type)="data">
                 {{data.value === "M" ? "인력" : "장비"}}

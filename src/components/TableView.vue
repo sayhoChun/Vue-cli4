@@ -1,5 +1,5 @@
 <template>
-  <div class="w-75 mx-auto">
+  <b-container fluid="sm" class="mx-auto">
     <b-table v-if="isVisible" class="mt-3 mx-auto small" id="regionTable"  striped hover
              :items="this.provider"
              :busy.sync="isBusy"
@@ -18,7 +18,7 @@
       </template>
     </b-table>
     <router-view class="view"></router-view>
-  </div>
+  </b-container>
 </template>
 
 <script>
