@@ -17,10 +17,12 @@
                      placeholder="전화번호"
             ></b-input>
             <b-button type="submit" class="ml-2" variant="primary">Search</b-button>
+
+            <b-button type="button" class="ml-auto" variant="primary" @click="addUser">+ Add User</b-button>
         </b-form>
 
         <div>
-            <b-table class="small" striped hover
+            <b-table class="small" striped hover ref="userList"
                      :items="this.provider"
                      :fields="fields"
                      :busy.sync="isBusy"
@@ -128,16 +130,17 @@
             },
             onSubmit(evt){
                 evt.preventDefault();
-                this.$root.$emit('bv::refresh::table', 'userList')
+                this.$refs.userList.refresh();
             },
             rowClickHandler(record){
                 const path = `/userList/detail/${record["id"]}`;
                 if(this.$route.path !== path) this.$router.push(path);
-                window.scrollTo({
-                    top: 0,
-                    left: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+            },
+            addUser(){
+                const path = `/userList/detail/0`;
+                if(this.$route.path !== path) this.$router.push(path);
+                window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
             }
         }
     }

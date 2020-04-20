@@ -3,7 +3,7 @@
         <div class="text-center mb-3 justify-content-between">
             <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"/>
         </div>
-        <b-form v-if="!this.spinnerStatus" @submit="onSubmit">
+        <b-form v-if="!this.spinnerStatus" @submit="onSubmit" @keypress.enter.prevent>
             <b-form-group id="nameGroup" label="이름" label-for="name">
                 <b-form-input id="name" v-model="form.name" required placeholder="Enter name"/>
             </b-form-group>
@@ -48,9 +48,7 @@
             </b-form-group>
 
             <b-form-group id="input-group-1" label-cols="3" label-cols-lg="1" label="회원 타입" label-for="typeSelect">
-                <b-form-select
-                        id="typeSelect"
-                        class="mb-2 mr-sm-2 mb-sm-0"
+                <b-form-select id="typeSelect" class="mb-2 mr-sm-2 mb-sm-0"
                         :options="[
                             {text: '선택...', value: null},
                             {text: '장비회원', value: 'G'},
@@ -103,17 +101,20 @@
         },
         mounted() {
             this.$store.dispatch("loadRegion");
-            this.form.id = this.$route.params.id;
-            this.provider(this.form.id);
+            this.form.id = Number(this.$route.params.id);
+            this.checkType();
         },
         watch: {
-            $route(to, from){
-                console.log(from);
-                this.form.id = to.params.id;
-                this.provider(this.form.id);
+            $route(to, /*from*/){
+                this.form.id = Number(to.params.id);
+                this.checkType();
             }
         },
         methods:{
+            checkType(){
+                if(this.form.id === 0) this.spinnerStatus = false;
+                else this.provider(this.form.id);
+            },
             render(res){
                 this.form = res.data.data;
                 this.form.pushFlag = res.data.data["pushFlag"] === 1;
@@ -181,8 +182,7 @@
                             icon: "success",
                             title: "Success",
                             text: "저장되었습니다."
-                        })
-                        this.$root.$emit('bv::refresh::table', 'userList')
+                        }).then(() => this.$parent.$refs.userList.refresh())
                     }
                     else{
                         this.$swal({
@@ -190,7 +190,7 @@
                             title: "Oops...",
                             text: res.data["returnMessage"]
                         }).then(res => {
-                            if(res.value) this.$router.go(0);
+                            if(res.value) this.$router.go(0)
                         });
                     }
                     this.submitBtnSpinnerStat = false;
