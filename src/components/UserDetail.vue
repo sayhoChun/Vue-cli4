@@ -32,7 +32,7 @@
                             </b-form-select>
                         </b-col>
                         <b-col cols="5" md="3" class="p-1">
-                            <b-form-select :id="`gugun${index}`" class="mt-1" v-model="form.selected[index][1]" required>
+                            <b-form-select :id="`gugun${index}`" class="mt-1" v-model="form.selected[index][1]" @change="onGugunSelect(index)" required>
                                 <option label="구/군 선택..." :value="null"/>
                                 <option v-for="gugun in gugunList[index]" :key="gugun['gugunID']" :value="gugun['gugunID']">
                                     {{gugun['description']}}
@@ -137,11 +137,21 @@
                 this.form.selected[idx][1] = null;
             },
             gugunListProvider(idx){
-                this.$http.get( `${this.CONSTANTS.API_URL}/info/region/${this.form.selected[idx][0]}`)
-                .then(res => {
-                    this.$set(this.gugunList, idx, res.data.data);
-                    return true;
-                }).catch(error => {console.log(error)});
+                if(this.form.selected[idx][0]){
+                    this.$http.get( `${this.CONSTANTS.API_URL}/info/region/${this.form.selected[idx][0]}`)
+                        .then(res => {
+                            this.$set(this.gugunList, idx, res.data.data);
+                            return true;
+                        }).catch(error => {console.log(error)});
+                }
+            },
+            onGugunSelect(idx){
+                let cnt = 0;
+                this.form.selected.forEach(item => {
+                    if(this.form.selected[idx][0] === item[0] && this.form.selected[idx][1] === item[1]) cnt++;
+                });
+                if(cnt >= 2)
+                    this.$swal({text: "중복된 지역입니다.", icon: "error"}).then(() => this.removeCurrentRegion(idx))
             },
             addNewRegion(){
                 this.form.userRegion.push(this.Vue.util.extend({}, this.form.region));
@@ -151,6 +161,7 @@
                 const removeItem = (items, idx) => items.slice(0, idx).concat(items.slice(idx + 1, items.length));
                 this.form.userRegion = removeItem(this.form.userRegion, index);
                 this.form.selected = removeItem(this.form.selected, index);
+                for(let i=0; i<this.form.selected.length; i++) this.gugunListProvider(i);
             },
             onSubmit(evt){
                 evt.preventDefault();
