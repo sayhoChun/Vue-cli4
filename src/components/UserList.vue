@@ -21,7 +21,6 @@
 
         <div>
             <b-table class="small" striped hover
-                     id="userList"
                      :items="this.provider"
                      :fields="fields"
                      :busy.sync="isBusy"
@@ -145,5 +144,4 @@
 </script>
 
 <style scoped>
-    #userList:before, #userList:after {display: none !important;}
 </style>
