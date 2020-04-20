@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="md" class="mt-3 mx-auto">
+    <b-container fluid="xs" class="mt-3 mx-auto">
         <router-view class="view"></router-view>
 
         <b-form inline class="mt-3 mb-2" @submit="onSubmit">
@@ -18,42 +18,44 @@
             ></b-input>
             <b-button type="submit" class="ml-2" variant="primary">Search</b-button>
         </b-form>
-        <b-table class="mx-auto small" striped hover
-                 id="userList"
-                 :items="this.provider"
-                 :fields="fields"
-                 :busy.sync="isBusy"
-                 :no-provider-sorting="true"
-                 :sort-by.sync="sortBy"
-                 :sort-desc.sync="sortDesc"
-                 :per-page="perPage"
-                 :current-page="currentPage"
-                 @row-clicked="rowClickHandler"
-                 fixed responsive="md"
-        >
-            <template v-slot:cell(type)="data">
-                {{data.value === "M" ? "인력" : "장비"}}
-            </template>
 
-            <template v-slot:table-busy>
-                <div class="text-center text-primary my-2">
-                    <b-spinner class="align-middle"/>
-                    <strong> Loading...</strong>
-                </div>
-            </template>
-        </b-table>
+        <div>
+            <b-table class="small" striped hover
+                     id="userList"
+                     :items="this.provider"
+                     :fields="fields"
+                     :busy.sync="isBusy"
+                     :no-provider-sorting="true"
+                     :sort-by.sync="sortBy"
+                     :sort-desc.sync="sortDesc"
+                     :per-page="perPage"
+                     :current-page="currentPage"
+                     @row-clicked="rowClickHandler"
+                     fixed responsive="sm"
+            >
+                <template v-slot:cell(type)="data">
+                    {{data.value === "M" ? "인력" : "장비"}}
+                </template>
 
-        <b-pagination
-                v-model="currentPage"
-                :total-rows="rows"
-                :per-page="perPage"
-                aria-controls="my-table"
-                first-text="First"
-                prev-text="<"
-                next-text=">"
-                last-text="Last"
-                size="sm"
-        />
+                <template v-slot:table-busy>
+                    <div class="text-center text-primary my-2">
+                        <b-spinner class="align-middle"/>
+                        <strong> Loading...</strong>
+                    </div>
+                </template>
+            </b-table>
+            <b-pagination
+                    v-model="currentPage"
+                    :total-rows="rows"
+                    :per-page="perPage"
+                    aria-controls="my-table"
+                    first-text="First"
+                    prev-text="<"
+                    next-text=">"
+                    last-text="Last"
+                    size="sm"
+            />
+        </div>
     </b-container>
 </template>
 
@@ -143,5 +145,5 @@
 </script>
 
 <style scoped>
-
+    #userList:before, #userList:after {display: none !important;}
 </style>

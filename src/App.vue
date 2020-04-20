@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="sm" id="app">
+  <b-container fluid="md" id="app">
     <Header/>
     <img alt="Vue logo" src="./assets/logo.png" class="mt-5">
     <router-view class="view"></router-view>
@@ -27,5 +27,8 @@ export default {
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+    overflow-x: hidden;
+    position: relative;
+    touch-action: manipulation;
   }
 </style>
