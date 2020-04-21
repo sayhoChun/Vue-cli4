@@ -112,7 +112,10 @@
         },
         methods:{
             checkType(){
-                if(this.form.id === 0) this.spinnerStatus = false;
+                if(this.form.id === 0) {
+                    Object.assign(this.$data, this.$options.data());
+                    this.spinnerStatus = false;
+                }
                 else this.provider(this.form.id);
             },
             render(res){
