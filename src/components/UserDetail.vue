@@ -89,11 +89,7 @@
                     type: "",
                     userRegion: [],
                     selected: [],
-                    region: {
-                        sidoId: null,
-                        gugunId: null,
-                        userId: null
-                    },
+                    region: {sidoId: null, gugunId: null, userId: null},
                     pushFlag: null
                 },
                 submitBtnSpinnerStat: false

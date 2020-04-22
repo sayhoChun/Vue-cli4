@@ -7,6 +7,7 @@
                 <b-navbar-nav>
                     <b-nav-item href="/region">Region</b-nav-item>
                     <b-nav-item href="/userList">UserList</b-nav-item>
+                    <b-nav-item href="/chatList">ChatList</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->

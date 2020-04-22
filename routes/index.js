@@ -6,6 +6,7 @@ import TableView from "../src/components/TableView";
 import SidoTable from "../src/components/SidoTable";
 import UserList from "../src/components/UserList";
 import UserDetail from "../src/components/UserDetail";
+import ChatList from "../src/components/ChatList";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,11 @@ export const router = new VueRouter({
             children: [
                 {path: "detail/:id", name: "userDetail", component: UserDetail}
             ]
+        },
+        {
+            path: "/chatList",
+            name: "chatList",
+            component: ChatList
         }
     ]
 });
