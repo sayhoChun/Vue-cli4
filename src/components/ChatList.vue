@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container fluid="sm">
         <b-list-group>
             <b-list-group-item v-for="rowItem in this.chatList" href="#"
                                class="flex-column align-items-start"

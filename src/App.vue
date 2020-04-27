@@ -1,8 +1,8 @@
 <template>
-  <b-container id="app">
+  <div id="app">
     <Header/>
     <router-view class="view"></router-view>
-  </b-container>
+  </div>
 </template>
 
 <script>

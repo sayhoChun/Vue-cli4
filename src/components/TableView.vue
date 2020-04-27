@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="xs" class="mx-auto">
+  <b-container fluid="sm" class="mx-auto">
     <b-table v-if="isVisible" class="mt-3 mx-auto small" id="regionTable"  striped hover
              :items="this.provider"
              :busy.sync="isBusy"

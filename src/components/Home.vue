@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="xs" class="mx-auto">
+    <b-container fluid="sm" class="mx-auto">
         <img alt="Vue logo" src="../assets/logo.png" class="mt-5">
         <b-list-group>
             <b-list-group-item>

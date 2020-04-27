@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="xs" class="mt-3 mx-auto mb-5 text-sm-left">
+    <b-container fluid="sm" class="mt-3 mx-auto mb-5 text-sm-left">
         <div class="text-center mb-3 justify-content-between">
             <b-spinner v-if="this.spinnerStatus" variant="success" label="contentHidden" key="spinner" ref="spinner"/>
         </div>

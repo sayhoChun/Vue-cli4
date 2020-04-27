@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid="xs" class="SidoTable mx-auto">
+    <b-container fluid="sm" class="SidoTable mx-auto">
         <b-table class="mt-3 mx-auto small" striped hover
                  :items="this.provider"
                  :fields="fields"
