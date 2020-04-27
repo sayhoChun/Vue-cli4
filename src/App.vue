@@ -1,7 +1,6 @@
 <template>
-  <b-container fluid="md" id="app">
+  <b-container id="app">
     <Header/>
-    <img alt="Vue logo" src="./assets/logo.png" class="mt-5">
     <router-view class="view"></router-view>
   </b-container>
 </template>

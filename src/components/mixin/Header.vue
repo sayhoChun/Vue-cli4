@@ -1,8 +1,8 @@
 <template>
     <div>
-        <b-navbar type="dark" variant="dark" fixed="top">
+        <b-navbar type="dark" toggleable="sm" variant="dark" fixed="top">
             <b-navbar-brand href="/">Home</b-navbar-brand>
-
+            <b-navbar-toggle target="nav-collapse"/>
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
                     <b-nav-item href="/region">Region</b-nav-item>
@@ -58,6 +58,7 @@
                 showModal: false,
                 account: null,
                 password: null,
+                expanded: false
             }
         },
         created() {

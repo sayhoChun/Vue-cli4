@@ -7,6 +7,7 @@ import SidoTable from "../src/components/SidoTable";
 import UserList from "../src/components/UserList";
 import UserDetail from "../src/components/UserDetail";
 import ChatList from "../src/components/ChatList";
+import Chat from "../src/components/Chat";
 
 Vue.use(VueRouter);
 
@@ -26,10 +27,7 @@ export const router = new VueRouter({
                 {path: "detail/:id", name: "userDetail", component: UserDetail}
             ]
         },
-        {
-            path: "/chatList",
-            name: "chatList",
-            component: ChatList
-        }
+        {path: "/chatList", name: "chatList", component: ChatList},
+        {path: "/chatList/:id", name: "chat", component: Chat}
     ]
 });

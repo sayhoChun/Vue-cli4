@@ -1,5 +1,6 @@
 <template>
     <b-container fluid="xs" class="mx-auto">
+        <img alt="Vue logo" src="../assets/logo.png" class="mt-5">
         <b-list-group>
             <b-list-group-item>
                 count
