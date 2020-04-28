@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header ref="headerRef"/>
     <router-view class="view"></router-view>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
     font-family: NanumSquare, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
+    /*text-align: center;*/
     color: #2c3e50;
     margin-top: 60px;
     overflow-x: hidden;

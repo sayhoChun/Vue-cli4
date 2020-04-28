@@ -1,5 +1,7 @@
 <template>
-    <b-container fluid="sm" class="mt-3 mx-auto">
+    <b-container fluid="sm" class="mt-3">
+        <h2>User</h2>
+        <hr class="my-3">
         <router-view class="view"></router-view>
 
         <b-form inline class="mt-3 mb-2" @submit="onSubmit">
@@ -22,7 +24,7 @@
         </b-form>
 
         <div>
-            <b-table class="small" striped hover ref="userList"
+            <b-table class="small text-center" striped hover ref="userList"
                      :items="this.provider"
                      :fields="fields"
                      :busy.sync="isBusy"

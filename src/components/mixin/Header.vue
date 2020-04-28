@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.$store.state.headerVisible">
         <b-navbar type="dark" toggleable="sm" variant="dark" fixed="top">
             <b-navbar-brand href="/">Home</b-navbar-brand>
             <b-navbar-toggle target="nav-collapse"/>
@@ -54,6 +54,7 @@
         name: "Header",
         data() {
             return {
+                visible: true,
                 signInSpinnerStatus: false,
                 showModal: false,
                 account: null,
@@ -122,7 +123,7 @@
                             if(this.$route.path !== path) this.$router.push(path);
                         });
                     });
-            }
+            },
         },
         computed: {
             ...mapState([

@@ -1,27 +1,30 @@
 <template>
-    <div>
-        <Chat v-if="visible"
-              :participants="participants"
-              :myself="myself"
-              :messages="messages"
-              :chat-title="chatTitle"
-              :placeholder="placeholder"
-              :colors="colors"
-              :border-style="borderStyle"
-              :hide-close-button="hideCloseButton"
-              :close-button-icon-size="closeButtonIconSize"
-              :submit-icon-size="submitIconSize"
-              :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-              :async-mode="asyncMode"
-              :scroll-bottom="scrollBottom"
-              :display-header="true"
-              :send-images="true"
-              :profile-picture-config="profilePictureConfig"
-              @onImageClicked="onImageClicked"
-              @onImageSelected="onImageSelected"
-              @onMessageSubmit="onMessageSubmit"
-              @onType="onType"
-              @onClose="onClose"/>
+    <div class="content">
+        <div class="chat-container">
+            <Chat v-if="visible"
+                  :participants="participants"
+                  :myself="myself"
+                  :messages="messages"
+                  :chat-title="chatTitle"
+                  :placeholder="placeholder"
+                  :colors="colors"
+                  :border-style="borderStyle"
+                  :hide-close-button="hideCloseButton"
+                  :close-button-icon-size="closeButtonIconSize"
+                  :submit-icon-size="submitIconSize"
+                  :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
+                  :async-mode="asyncMode"
+                  :scroll-bottom="scrollBottom"
+                  :display-header="true"
+                  :send-images="true"
+                  :profile-picture-config="profilePictureConfig"
+                  @onImageClicked="onImageClicked"
+                  @onImageSelected="onImageSelected"
+                  @onMessageSubmit="onMessageSubmit"
+                  @onType="onType"
+                  @onClose="onClose"
+            />
+        </div>
     </div>
 </template>
 
@@ -35,66 +38,19 @@
         },
         data() {
             return {
+                roomId: null,
                 visible: true,
-                participants: [
-                    {
-                        name: 'Arnaldo',
-                        id: 1,
-                        profilePicture: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/NafSadh_Profile.jpg/768px-NafSadh_Profile.jpg'
-                    },
-                    {
-                        name: 'José',
-                        id: 2,
-                        profilePicture: 'https://lh3.googleusercontent.com/-G1d4-a7d_TY/AAAAAAAAAAI/AAAAAAAAAAA/AAKWJJPez_wX5UCJztzEUeCxOd7HBK7-jA.CMID/s83-c/photo.jpg'
-                    }
-                ],
-                myself: {
-                    name: 'Matheus S.',
-                    id: 3,
-                    profilePicture: 'https://lh3.googleusercontent.com/-G1d4-a7d_TY/AAAAAAAAAAI/AAAAAAAAAAA/AAKWJJPez_wX5UCJztzEUeCxOd7HBK7-jA.CMID/s83-c/photo.jpg'
-                },
-                messages: [
-                    {
-                        content: 'received messages',
-                        myself: false,
-                        participantId: 1,
-                        timestamp: {year: 2019, month: 3, day: 5, hour: 20, minute: 10, second: 3, millisecond: 123},
-                        type: 'text'
-                    },
-                    {
-                        content: 'sent messages',
-                        myself: true,
-                        participantId: 3,
-                        timestamp: {year: 2019, month: 4, day: 5, hour: 19, minute: 10, second: 3, millisecond: 123},
-                        type: 'text'
-                    },
-                    {
-                        content: 'other received messages',
-                        myself: false,
-                        participantId: 2,
-                        timestamp: {year: 2019, month: 5, day: 5, hour: 10, minute: 10, second: 3, millisecond: 123},
-                        type: 'text'
-                    }
-                ],
-                chatTitle: 'My chat title',
+                participants: [],
+                myself: {},
+                messages: [],
+                chatTitle: null,
                 placeholder: 'send your message',
                 colors: {
-                    header: {
-                        bg: '#d30303',
-                        text: '#fff'
-                    },
+                    header: {bg: '#d30303', text: '#fff'},
                     message: {
-                        myself: {
-                            bg: '#fff',
-                            text: '#bdb8b8'
-                        },
-                        others: {
-                            bg: '#fb4141',
-                            text: '#fff'
-                        },
-                        messagesDisplay: {
-                            bg: '#f7f3f3'
-                        }
+                        myself: {bg: '#fff', text: '#bdb8b8'},
+                        others: {bg: '#fb4141', text: '#fff'},
+                        messagesDisplay: {bg: '#f7f3f3'}
                     },
                     submitIcon: '#b91010',
                     submitImageIcon: '#b91010',
@@ -109,26 +65,7 @@
                 submitIconSize: 25,
                 closeButtonIconSize: "20px",
                 asyncMode: false,
-                toLoad: [
-                    {
-                        content: 'Hey, John Doe! How are you today?',
-                        myself: false,
-                        participantId: 2,
-                        timestamp: {year: 2011, month: 3, day: 5, hour: 10, minute: 10, second: 3, millisecond: 123},
-                        uploaded: true,
-                        viewed: true,
-                        type: 'text'
-                    },
-                    {
-                        content: "Hey, Adam! I'm feeling really fine this evening.",
-                        myself: true,
-                        participantId: 3,
-                        timestamp: {year: 2010, month: 0, day: 5, hour: 19, minute: 10, second: 3, millisecond: 123},
-                        uploaded: true,
-                        viewed: true,
-                        type: 'text'
-                    },
-                ],
+                toLoad: [],
                 scrollBottom: {
                     messageSent: true,
                     messageReceived: false
@@ -145,7 +82,55 @@
                 }
             }
         },
+        mounted(){
+            if(!this.$store.getters.isLoggedIn){
+                this.$swal({
+                    text: "로그인 후 이용 바랍니다.",
+                    icon: 'warning',
+                    backdrop: "#696969",
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                }).then((result) => {
+                    if(result.value){
+                        this.$router.push("/");
+                    }
+                })
+            }else this.provider();
+        },
         methods: {
+            provider(){
+                let promise = this.$http.get(`${this.CONSTANTS.API_URL}/dummy/info/chat/${this.$route.params.id}`);
+                return promise.then(res => {
+                    let myself = this.$store.getters.getToken.id;
+                    let data = res.data.data;
+                    let memberList = data["memberList"];
+                    let messageList = data["messageList"];
+                    let roomInfo = data["roomInfo"];
+
+                    this.participants = [];
+                    memberList.forEach(item => {
+                        item["id"] = item.userId;
+                        if(item.userId === myself) this.myself = item;
+                        else this.participants.push(item);
+                    });
+
+                    messageList.forEach(item => {
+                        item["myself"] = item.userId === myself;
+                        item["participantId"] = item.userId;
+                        item["type"] = "text";
+                    });
+                    this.messages = messageList;
+                    this.roomId = roomInfo["id"];
+                    this.chatTitle = roomInfo["name"];
+                })
+                    .catch(err => {
+                        this.$swal({
+                            icon: "error",
+                            title: "Oops ...",
+                            text: err
+                        }).then(res => {if(res) return []});
+                    })
+            },
             onType: function(event){
                 //here you can set any behavior
                 console.log(event);
@@ -158,14 +143,18 @@
                     this.toLoad = [];
                 }, 1000);
             },
-            onMessageSubmit: function (message) {
-                /*
-                * example simulating an upload callback.
-                * It's important to notice that even when your message wasn't send
-                * yet to the server you have to add the message into the array
-                */
-                this.messages.push(message);
+            onMessageSubmit(message){
+                console.log(message);
 
+                this.messages.push(message);
+                this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${message.participantId}`, this.qs.stringify({
+                    roomId: this.roomId,
+                    content: message.content
+                }))
+                .then(res => {
+                    console.log(res);
+                    this.provider();
+                })
                 /*
                 * you can update message state after the server response
                 */
@@ -201,6 +190,25 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+    .chat-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgb(247, 243, 243);
+        /*height: 92vh;*/
+        height: 75vh;
+        width: 100vw;
+    }
+    .message-username{white-space: nowrap !important;}
+    .container-message-display .other-message-body .message-text{max-width: 100%;}
+    .container-message-display .myself-message-body .message-text{max-width: 100%;}
 </style>

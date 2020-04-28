@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        headerVisible: true,
         token: {
             id: null,
             name: null,

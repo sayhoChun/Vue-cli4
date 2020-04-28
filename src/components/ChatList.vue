@@ -1,5 +1,7 @@
 <template>
     <b-container fluid="sm">
+        <h2>Chat</h2>
+        <hr class="my-3">
         <b-list-group>
             <b-list-group-item v-for="rowItem in this.chatList" href="#"
                                class="flex-column align-items-start"
@@ -25,6 +27,9 @@
             }
         },
         mounted(){
+            // TODO
+            // let res = this.$authCheck();
+            // console.log(res);
             if(!this.$store.getters.isLoggedIn){
                 this.$swal({
                     text: "로그인 후 이용 바랍니다.",
@@ -37,8 +42,7 @@
                         this.$router.push("/");
                     }
                 })
-            }
-            this.provider();
+            }else this.provider();
         },
         methods:{
             provider(){
