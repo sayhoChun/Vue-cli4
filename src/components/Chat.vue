@@ -97,6 +97,7 @@
                     }
                 })
             }else{
+                this.$scrollLock.enable();
                 this.provider();
                 this.startPolling();
             }
