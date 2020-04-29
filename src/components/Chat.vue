@@ -38,6 +38,7 @@
         },
         data() {
             return {
+                intervalId: null,
                 roomId: null,
                 visible: true,
                 participants: [],
@@ -68,7 +69,7 @@
                 toLoad: [],
                 scrollBottom: {
                     messageSent: true,
-                    messageReceived: false
+                    messageReceived: true
                 },
                 displayHeader:true,
                 profilePictureConfig: {
@@ -95,7 +96,14 @@
                         this.$router.push("/");
                     }
                 })
-            }else this.provider();
+            }else{
+                this.provider();
+                this.startPolling();
+            }
+        },
+        beforeRouteLeave(to, from, next){
+            clearInterval(this.intervalId);
+            next();
         },
         methods: {
             provider(){
@@ -185,6 +193,9 @@
                  * You can add your code here to do whatever you need with the image clicked. A common situation is to display the image clicked in full screen.
                  */
                 console.log('Image clicked', message.src)
+            },
+            startPolling(){
+                this.intervalId = setInterval(this.provider, 2000);
             }
         }
     }
