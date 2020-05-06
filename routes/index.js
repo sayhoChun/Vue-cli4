@@ -10,7 +10,7 @@ import VueRouter from 'vue-router'
 // import Chat from "../src/components/Chat";
 
 function loadView(view) {
-    return () => import(/* webpackChunkName: "view-[request]" */ `../src/components/${view}.vue`)
+    return () => import(/* webpackChunkName: "view-[request]" */ `@/components/${view}.vue`)
 }
 
 Vue.use(VueRouter);
