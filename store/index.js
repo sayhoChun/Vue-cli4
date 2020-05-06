@@ -82,7 +82,7 @@ export default new Vuex.Store({
                     commit('failGenerateRandomNumber', res);
                 });
         },
-        loadRegion({commit, /*state*/}, /*payload*/){
+        loadRegion: ({commit, /*state*/}, /*payload*/) => {
             axios.get(`${CONSTANTS.API_URL}/info/region`)
                 .then((res) =>{
                     commit("processRegion", res.data);
@@ -91,7 +91,7 @@ export default new Vuex.Store({
                     commit("connectionFail", res);
                 })
         },
-        loadSido({commit, /*state*/}, payload){
+        loadSido: ({commit, /*state*/}, payload) => {
             axios.get(`${CONSTANTS.API_URL}/info/region/${payload}`)
                 .then((res) =>{
                     commit("processSido", res.data);
@@ -99,7 +99,7 @@ export default new Vuex.Store({
                 .catch((res) =>{
                     commit("connectionFail", res);
                 })
-        }
+        },
     },
 })
 
