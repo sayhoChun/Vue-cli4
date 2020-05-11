@@ -113,7 +113,9 @@
         },
         methods: {
             connect(){
-                this.socket = new WebSocket("ws://localhost:10060/socket", this.roomId);
+                this.socket = new WebSocket(
+                    `${this.CONSTANTS.WEB_SOCKET_URL}?uId=${this.$store.getters.getToken.id}&rId=${this.$route.params.id}`
+                );
                 this.socket.onopen = () =>{
                     this.status = "connected";
                     this.logs.push({event: "connection established", data: "ws://localhost:10060/socket"});
@@ -216,7 +218,8 @@
             onImageClicked(message){
                 /**
                  * This is the callback function that is going to be executed when some image is clicked.
-                 * You can add your code here to do whatever you need with the image clicked. A common situation is to display the image clicked in full screen.
+                 * You can add your code here to do whatever you need with the image clicked.
+                 * A common situation is to display the image clicked in full screen.
                  */
                 console.log('Image clicked', message.src)
             },
