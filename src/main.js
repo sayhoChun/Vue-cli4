@@ -10,7 +10,6 @@ import qs from 'qs'
 import Constants from "./Constants";
 import VueSweetalert2 from "vue-sweetalert2";
 import 'sweetalert2/dist/sweetalert2.min.css';
-import AuthPlugin from "./plugins/AuthPlugin";
 import scrollLock from "./utils/scrollLock";
 
 Vue.prototype.$http = Axios;
@@ -21,7 +20,6 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(VueSweetalert2);
 Vue.use(IconsPlugin);
-Vue.use(AuthPlugin);
 Vue.prototype.$scrollLock = scrollLock;
 
 new Vue({

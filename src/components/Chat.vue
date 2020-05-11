@@ -38,6 +38,9 @@
         },
         data() {
             return {
+                status: "disconnected",
+                logs: [],
+
                 intervalId: null,
                 roomId: null,
                 visible: true,
@@ -99,14 +102,36 @@
             }else{
                 this.$scrollLock.enable();
                 this.provider();
-                this.startPolling();
+                // this.startPolling();
+                this.connect();
             }
         },
         beforeRouteLeave(to, from, next){
             clearInterval(this.intervalId);
+            this.disconnect();
             next();
         },
         methods: {
+            connect(){
+                this.socket = new WebSocket("ws://localhost:10060/socket", this.roomId);
+                this.socket.onopen = () =>{
+                    this.status = "connected";
+                    this.logs.push({event: "connection established", data: "ws://localhost:10060/socket"});
+                    this.socket.onmessage = ({data}) => {
+                        console.log({event: "message received", data: data});
+                        this.logs.push({event: "message received", data: data})
+                    }
+                }
+            },
+            disconnect(){
+                this.socket.close();
+                this.status = "disconnected";
+                this.logs = [];
+            },
+            sendMessage(msg){
+                this.socket.send(msg);
+                this.logs.push({event: "message sent", data: msg});
+            },
             provider(){
                 let promise = this.$http.get(`${this.CONSTANTS.API_URL}/dummy/info/chat/${this.$route.params.id}`);
                 return promise.then(res => {
@@ -154,7 +179,6 @@
             },
             onMessageSubmit(message){
                 console.log(message);
-
                 this.messages.push(message);
                 this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${message.participantId}`, this.qs.stringify({
                     roomId: this.roomId,
@@ -163,6 +187,7 @@
                 .then(res => {
                     console.log(res);
                     this.provider();
+                    this.sendMessage(message.content);
                 })
                 /*
                 * you can update message state after the server response
