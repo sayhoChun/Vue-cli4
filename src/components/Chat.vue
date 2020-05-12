@@ -38,6 +38,7 @@
         },
         data() {
             return {
+                timeout: null,
                 status: "disconnected",
                 logs: [],
 
@@ -105,6 +106,8 @@
                 // this.startPolling();
                 this.connect();
             }
+
+            console.log(this.$store.getters.getToken);
         },
         beforeRouteLeave(to, from, next){
             clearInterval(this.intervalId);
@@ -114,12 +117,18 @@
         methods: {
             connect(){
                 this.socket = new WebSocket(
-                    `${this.CONSTANTS.WEB_SOCKET_URL}?uId=${this.$store.getters.getToken.id}&rId=${this.$route.params.id}`
+                    `${this.CONSTANTS.WEB_SOCKET_URL}?uId=${this.$store.getters.getToken.id}&rId=${this.$route.params.id}&name=${this.$store.getters.getToken.name}&account=${this.$store.getters.getToken.account}&phone=${this.$store.getters.getToken.phone}`
                 );
                 this.socket.onopen = () =>{
+                    setInterval(this.ping, 30000);
                     this.status = "connected";
                     this.logs.push({event: "connection established", data: "ws://localhost:10060/socket"});
                     this.socket.onmessage = ({data}) => {
+                        if(data.data === '__pong__'){
+                            this.pong();
+                            return;
+                        }
+                        this.provider();
                         console.log({event: "message received", data: data});
                         this.logs.push({event: "message received", data: data})
                     }
@@ -225,6 +234,15 @@
             },
             startPolling(){
                 this.intervalId = setInterval(this.provider, 2000);
+            },
+            ping(){
+                this.socket.send('__ping__');
+                this.timeout = setTimeout(() => {
+
+                }, 5000);
+            },
+            pong(){
+                clearTimeout(this.timeout);
             }
         }
     }
