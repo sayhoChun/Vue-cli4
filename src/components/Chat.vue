@@ -103,11 +103,8 @@
             }else{
                 this.$scrollLock.enable();
                 this.provider();
-                // this.startPolling();
                 this.connect();
             }
-
-            console.log(this.$store.getters.getToken);
         },
         beforeRouteLeave(to, from, next){
             clearInterval(this.intervalId);
@@ -115,22 +112,30 @@
             next();
         },
         methods: {
+            waitForConnection(callback, interval){
+                if(this.socket.readyState === 1) callback();
+                else setTimeout(() => this.waitForConnection(callback, interval), interval)
+            },
             connect(){
                 this.socket = new WebSocket(
                     `${this.CONSTANTS.WEB_SOCKET_URL}?uId=${this.$store.getters.getToken.id}&rId=${this.$route.params.id}&name=${this.$store.getters.getToken.name}&account=${this.$store.getters.getToken.account}&phone=${this.$store.getters.getToken.phone}`
                 );
-                this.socket.onopen = () =>{
+                this.socket.onopen = () => {
                     setInterval(this.ping, 30000);
                     this.status = "connected";
-                    this.logs.push({event: "connection established", data: "ws://localhost:10060/socket"});
+                    this.logs.push({event: "connection established", data: this.CONSTANTS.WEB_SOCKET_URL});
                     this.socket.onmessage = ({data}) => {
-                        if(data.data === '__pong__'){
-                            this.pong();
-                            return;
+                        // let jsonData = JSON.parse(data);
+                        let message = JSON.parse(data)["userMessage"];
+                        console.log(message);
+                        if(message === '__pong__' || message === '__ping__') this.pong();
+                        else{
+                            console.error("refreshed");
+                            this.provider();
+                            console.log({event: "message received", data: data});
+                            this.logs.push({event: "message received", data: data})
                         }
-                        this.provider();
-                        console.log({event: "message received", data: data});
-                        this.logs.push({event: "message received", data: data})
+
                     }
                 }
             },
@@ -140,9 +145,22 @@
                 this.logs = [];
             },
             sendMessage(msg){
-                this.socket.send(msg);
-                this.logs.push({event: "message sent", data: msg});
+                this.waitForConnection(() => {
+                    this.socket.send(msg);
+                    this.logs.push({event: "message sent", data: msg});
+                }, 1000)
             },
+            startPolling(){
+                this.intervalId = setInterval(this.provider, 2000);
+            },
+            ping(){
+                console.log("__ping__")
+                this.waitForConnection(() => {
+                    this.socket.send('__ping__');
+                    this.timeout = setTimeout(() => {}, 5000);
+                }, 1000)
+            },
+            pong(){clearTimeout(this.timeout)},
             provider(){
                 let promise = this.$http.get(`${this.CONSTANTS.API_URL}/dummy/info/chat/${this.$route.params.id}`);
                 return promise.then(res => {
@@ -231,18 +249,6 @@
                  * A common situation is to display the image clicked in full screen.
                  */
                 console.log('Image clicked', message.src)
-            },
-            startPolling(){
-                this.intervalId = setInterval(this.provider, 2000);
-            },
-            ping(){
-                this.socket.send('__ping__');
-                this.timeout = setTimeout(() => {
-
-                }, 5000);
-            },
-            pong(){
-                clearTimeout(this.timeout);
             }
         }
     }
