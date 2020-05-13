@@ -113,8 +113,12 @@
         },
         methods: {
             waitForConnection(callback, interval){
-                if(this.socket.readyState === 1) callback();
-                else setTimeout(() => this.waitForConnection(callback, interval), interval)
+                let state = this.socket.readyState;
+                if(state === 1) callback();
+                else setTimeout(() => {
+                    if(state !== 0) this.connect();
+                    this.waitForConnection(callback, interval)
+                }, interval)
             },
             connect(){
                 this.socket = new WebSocket(
@@ -215,7 +219,6 @@
                 }))
                 .then(res => {
                     console.log(res);
-                    this.provider();
                     this.sendMessage(message.content);
                 })
                 /*
