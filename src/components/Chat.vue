@@ -51,14 +51,17 @@
                 chatTitle: null,
                 placeholder: 'send your message',
                 colors: {
-                    header: {bg: '#d30303', text: '#fff'},
+                    header: {bg: '#343a40', text: '#fff'},
                     message: {
-                        myself: {bg: '#fff', text: '#bdb8b8'},
-                        others: {bg: '#fb4141', text: '#fff'},
+                        myself: {bg: '#343a40', text: '#fff'},
+                        // others: {bg: '#fff', text: '#bdb8b8'},
+                        others: {bg: '#fff', text: '#343a40'},
                         messagesDisplay: {bg: '#f7f3f3'}
                     },
-                    submitIcon: '#b91010',
-                    submitImageIcon: '#b91010',
+                    // submitIcon: '#b91010',
+                    // submitImageIcon: '#b91010',
+                    submitIcon: '#343a40',
+                    submitImageIcon: '#343a40',
                 },
                 borderStyle: {
                     topLeft: "10px",
