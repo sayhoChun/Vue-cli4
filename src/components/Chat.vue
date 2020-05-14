@@ -128,7 +128,7 @@
                     `${this.CONSTANTS.WEB_SOCKET_URL}?uId=${this.$store.getters.getToken.id}&rId=${this.$route.params.id}&name=${this.$store.getters.getToken.name}&account=${this.$store.getters.getToken.account}&phone=${this.$store.getters.getToken.phone}`
                 );
                 this.socket.onopen = () => {
-                    setInterval(this.ping, 30000);
+                    this.intervalId = setInterval(this.ping, 30000);
                     this.status = "connected";
                     this.logs.push({event: "connection established", data: this.CONSTANTS.WEB_SOCKET_URL});
                     this.socket.onmessage = ({data}) => {
@@ -156,9 +156,6 @@
                     this.socket.send(msg);
                     this.logs.push({event: "message sent", data: msg});
                 }, 1000)
-            },
-            startPolling(){
-                this.intervalId = setInterval(this.provider, 2000);
             },
             ping(){
                 console.log("__ping__")
@@ -232,21 +229,31 @@
                     message.uploaded = true
                 }, 2000)
             },
-            onClose() {
-                this.visible = false;
-            },
-            onImageSelected(files, message){
-                let src = 'https://149364066.v2.pressablecdn.com/wp-content/uploads/2017/03/vue.jpg'
-                this.messages.push(message);
+            onClose() {this.visible = false},
+            onImageSelected(files){
+                console.log(files);
+                var formData = new FormData();
+                formData.append("uploadImg", files.file);
+                this.$http.post(`${this.CONSTANTS.API_URL}/imgUpload`, formData, {
+                    headers: {"Content-Type": "multipart/form-data"}
+                })
+                .then(res => {
+                    console.log(res);
+                    let src = 'https://149364066.v2.pressablecdn.com/wp-content/uploads/2017/03/vue.jpg'
+                    this.messages.push(files.message);
+                    setTimeout((res) => {
+                        files.message.uploaded = true
+                        files.message.src = res.src
+                    }, 3000, {src});
+                })
+
+
                 /**
                  * This timeout simulates a requisition that uploads the image file to the server.
                  * It's up to you implement the request and deal with the response in order to
                  * update the message status and the message URL
                  */
-                setTimeout((res) => {
-                    message.uploaded = true
-                    message.src = res.src
-                }, 3000, {src});
+
             },
             onImageClicked(message){
                 /**
