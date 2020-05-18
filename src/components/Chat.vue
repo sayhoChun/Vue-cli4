@@ -148,11 +148,12 @@
                 this.status = "disconnected";
                 this.logs = [];
             },
-            sendMessage(msg){
+            sendMessage(msg, callback){
                 this.waitForConnection(() => {
                     this.socket.send(msg);
                     this.logs.push({event: "message sent", data: msg});
                 }, 1000)
+                callback();
             },
             ping(){
                 console.log("__ping__")
@@ -182,12 +183,14 @@
                         item["myself"] = item.userId === myself;
                         item["participantId"] = item.userId;
                         item["src"] = this.CONSTANTS.IMG_URL + "/" + item["src"];
-                        item["preview"] = this.CONSTANTS.IMG_URL + "/" + item["preview"];
                         item["uploaded"] = true;
                     });
                     this.messages = messageList;
                     this.roomId = roomInfo["id"];
                     this.chatTitle = roomInfo["name"];
+
+                    let container = this.$el.querySelector(".container-message-display");
+                    container.scrollTop = container.scrollHeight;
                 })
                     .catch(err => {
                         this.$swal({
@@ -220,15 +223,10 @@
                 }))
                 .then(res => {
                     console.log(res);
-                    this.sendMessage(message.content);
+                    this.sendMessage(message.content, () => {
+                        message.uploaded = true
+                    });
                 })
-                /*
-                * you can update message state after the server response
-                */
-                // timeout simulating the request
-                setTimeout(() => {
-                    message.uploaded = true
-                }, 2000)
             },
             onClose() {this.visible = false},
             onImageSelected(files){
@@ -253,8 +251,10 @@
                         if(res2.data["returnCode"] === 1){
                             console.log(path);
                             this.messages.push(files.message);
-                            files.message.uploaded = true;
                             files.message.src = src;
+                            this.sendMessage("image", () => {
+                                files.message.uploaded = true;
+                            })
                         }
                     })
                 })
