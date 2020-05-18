@@ -33,9 +33,7 @@
     import 'vue-quick-chat/dist/vue-quick-chat.css';
 
     export default {
-        components: {
-            Chat
-        },
+        components: {Chat},
         data() {
             return {
                 timeout: null,
@@ -137,7 +135,6 @@
                         console.log(message);
                         if(message === '__pong__' || message === '__ping__') this.pong();
                         else{
-                            console.error("refreshed");
                             this.provider();
                             console.log({event: "message received", data: data});
                             this.logs.push({event: "message received", data: data})
@@ -184,7 +181,9 @@
                     messageList.forEach(item => {
                         item["myself"] = item.userId === myself;
                         item["participantId"] = item.userId;
-                        item["type"] = "text";
+                        item["src"] = this.CONSTANTS.IMG_URL + "/" + item["src"];
+                        item["preview"] = this.CONSTANTS.IMG_URL + "/" + item["preview"];
+                        item["uploaded"] = true;
                     });
                     this.messages = messageList;
                     this.roomId = roomInfo["id"];
@@ -215,7 +214,9 @@
                 this.messages.push(message);
                 this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${message.participantId}`, this.qs.stringify({
                     roomId: this.roomId,
-                    content: message.content
+                    content: message.content,
+                    imgPath: null,
+                    type: 1
                 }))
                 .then(res => {
                     console.log(res);
@@ -239,21 +240,24 @@
                 })
                 .then(res => {
                     console.log(res);
-                    let src = 'https://149364066.v2.pressablecdn.com/wp-content/uploads/2017/03/vue.jpg'
-                    this.messages.push(files.message);
-                    setTimeout((res) => {
-                        files.message.uploaded = true
-                        files.message.src = res.src
-                    }, 3000, {src});
+                    let path = res.data.data.replace("img_upload/", "");
+                    let src = `${this.CONSTANTS.IMG_URL}/${path}`;
+                    this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${this.$store.getters.getToken.id}`,
+                    this.qs.stringify({
+                        roomId: this.roomId,
+                        content: null,
+                        imgPath: path,
+                        type: 2
+                    }))
+                    .then(res2 => {
+                        if(res2.data["returnCode"] === 1){
+                            console.log(path);
+                            this.messages.push(files.message);
+                            files.message.uploaded = true;
+                            files.message.src = src;
+                        }
+                    })
                 })
-
-
-                /**
-                 * This timeout simulates a requisition that uploads the image file to the server.
-                 * It's up to you implement the request and deal with the response in order to
-                 * update the message status and the message URL
-                 */
-
             },
             onImageClicked(message){
                 /**
