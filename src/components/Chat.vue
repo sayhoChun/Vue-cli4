@@ -52,12 +52,9 @@
                     header: {bg: '#343a40', text: '#fff'},
                     message: {
                         myself: {bg: '#343a40', text: '#fff'},
-                        // others: {bg: '#fff', text: '#bdb8b8'},
                         others: {bg: '#fff', text: '#343a40'},
                         messagesDisplay: {bg: '#f7f3f3'}
                     },
-                    // submitIcon: '#b91010',
-                    // submitImageIcon: '#b91010',
                     submitIcon: '#343a40',
                     submitImageIcon: '#343a40',
                 },
@@ -132,14 +129,12 @@
                     this.socket.onmessage = ({data}) => {
                         // let jsonData = JSON.parse(data);
                         let message = JSON.parse(data)["userMessage"];
-                        console.log(message);
                         if(message === '__pong__' || message === '__ping__') this.pong();
                         else{
                             this.provider();
                             console.log({event: "message received", data: data});
                             this.logs.push({event: "message received", data: data})
                         }
-
                     }
                 }
             },
@@ -156,7 +151,6 @@
                 callback();
             },
             ping(){
-                console.log("__ping__")
                 this.waitForConnection(() => {
                     this.socket.send('__ping__');
                     this.timeout = setTimeout(() => {}, 5000);
@@ -189,8 +183,10 @@
                     this.roomId = roomInfo["id"];
                     this.chatTitle = roomInfo["name"];
 
-                    let container = this.$el.querySelector(".container-message-display");
-                    container.scrollTop = container.scrollHeight;
+                    setTimeout(() => {
+                        let container = this.$el.querySelector(".container-message-display");
+                        container.scrollTop = container.scrollHeight;
+                    }, 1000)
                 })
                     .catch(err => {
                         this.$swal({
@@ -236,9 +232,9 @@
                 this.$http.post(`${this.CONSTANTS.API_URL}/imgUpload`, formData, {
                     headers: {"Content-Type": "multipart/form-data"}
                 })
-                .then(res => {
-                    console.log(res);
-                    let path = res.data.data.replace("img_upload/", "");
+                .then(imgRes => {
+                    console.log(imgRes);
+                    let path = imgRes.data.data.replace("img_upload/", "");
                     let src = `${this.CONSTANTS.IMG_URL}/${path}`;
                     this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${this.$store.getters.getToken.id}`,
                     this.qs.stringify({
@@ -247,8 +243,8 @@
                         imgPath: path,
                         type: 2
                     }))
-                    .then(res2 => {
-                        if(res2.data["returnCode"] === 1){
+                    .then(apiRes => {
+                        if(apiRes.data["returnCode"] === 1){
                             console.log(path);
                             this.messages.push(files.message);
                             files.message.src = src;

@@ -12,7 +12,7 @@
                     <h5 class="mb-1">{{rowItem.name}}</h5>
                     <small>{{rowItem["regDate"]}}</small>
                 </div>
-                <p class="mb-1">{{rowItem.content}}</p>
+                <p class="mb-1">{{rowItem.type === 1 ? rowItem.content : '&lt;image&gt;'}}</p>
             </b-list-group-item>
         </b-list-group>
     </b-container>
