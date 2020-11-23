@@ -33,9 +33,7 @@
     import 'vue-quick-chat/dist/vue-quick-chat.css';
 
     export default {
-        components: {
-            Chat
-        },
+        components: {Chat},
         data() {
             return {
                 timeout: null,
@@ -54,12 +52,9 @@
                     header: {bg: '#343a40', text: '#fff'},
                     message: {
                         myself: {bg: '#343a40', text: '#fff'},
-                        // others: {bg: '#fff', text: '#bdb8b8'},
                         others: {bg: '#fff', text: '#343a40'},
                         messagesDisplay: {bg: '#f7f3f3'}
                     },
-                    // submitIcon: '#b91010',
-                    // submitImageIcon: '#b91010',
                     submitIcon: '#343a40',
                     submitImageIcon: '#343a40',
                 },
@@ -134,15 +129,12 @@
                     this.socket.onmessage = ({data}) => {
                         // let jsonData = JSON.parse(data);
                         let message = JSON.parse(data)["userMessage"];
-                        console.log(message);
                         if(message === '__pong__' || message === '__ping__') this.pong();
                         else{
-                            console.error("refreshed");
                             this.provider();
                             console.log({event: "message received", data: data});
                             this.logs.push({event: "message received", data: data})
                         }
-
                     }
                 }
             },
@@ -151,14 +143,14 @@
                 this.status = "disconnected";
                 this.logs = [];
             },
-            sendMessage(msg){
+            sendMessage(msg, callback){
                 this.waitForConnection(() => {
                     this.socket.send(msg);
                     this.logs.push({event: "message sent", data: msg});
                 }, 1000)
+                callback();
             },
             ping(){
-                console.log("__ping__")
                 this.waitForConnection(() => {
                     this.socket.send('__ping__');
                     this.timeout = setTimeout(() => {}, 5000);
@@ -184,11 +176,17 @@
                     messageList.forEach(item => {
                         item["myself"] = item.userId === myself;
                         item["participantId"] = item.userId;
-                        item["type"] = "text";
+                        item["src"] = this.CONSTANTS.IMG_URL + "/" + item["src"];
+                        item["uploaded"] = true;
                     });
                     this.messages = messageList;
                     this.roomId = roomInfo["id"];
                     this.chatTitle = roomInfo["name"];
+
+                    setTimeout(() => {
+                        let container = this.$el.querySelector(".container-message-display");
+                        container.scrollTop = container.scrollHeight;
+                    }, 1000)
                 })
                     .catch(err => {
                         this.$swal({
@@ -215,19 +213,16 @@
                 this.messages.push(message);
                 this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${message.participantId}`, this.qs.stringify({
                     roomId: this.roomId,
-                    content: message.content
+                    content: message.content,
+                    imgPath: null,
+                    type: 1
                 }))
                 .then(res => {
                     console.log(res);
-                    this.sendMessage(message.content);
+                    this.sendMessage(message.content, () => {
+                        message.uploaded = true
+                    });
                 })
-                /*
-                * you can update message state after the server response
-                */
-                // timeout simulating the request
-                setTimeout(() => {
-                    message.uploaded = true
-                }, 2000)
             },
             onClose() {this.visible = false},
             onImageSelected(files){
@@ -237,23 +232,28 @@
                 this.$http.post(`${this.CONSTANTS.API_URL}/imgUpload`, formData, {
                     headers: {"Content-Type": "multipart/form-data"}
                 })
-                .then(res => {
-                    console.log(res);
-                    let src = 'https://149364066.v2.pressablecdn.com/wp-content/uploads/2017/03/vue.jpg'
-                    this.messages.push(files.message);
-                    setTimeout((res) => {
-                        files.message.uploaded = true
-                        files.message.src = res.src
-                    }, 3000, {src});
+                .then(imgRes => {
+                    console.log(imgRes);
+                    let path = imgRes.data.data.replace("img_upload/", "");
+                    let src = `${this.CONSTANTS.IMG_URL}/${path}`;
+                    this.$http.post(`${this.CONSTANTS.API_URL}/dummy/chat/message/add/${this.$store.getters.getToken.id}`,
+                    this.qs.stringify({
+                        roomId: this.roomId,
+                        content: null,
+                        imgPath: path,
+                        type: 2
+                    }))
+                    .then(apiRes => {
+                        if(apiRes.data["returnCode"] === 1){
+                            console.log(path);
+                            this.messages.push(files.message);
+                            files.message.src = src;
+                            this.sendMessage("image", () => {
+                                files.message.uploaded = true;
+                            })
+                        }
+                    })
                 })
-
-
-                /**
-                 * This timeout simulates a requisition that uploads the image file to the server.
-                 * It's up to you implement the request and deal with the response in order to
-                 * update the message status and the message URL
-                 */
-
             },
             onImageClicked(message){
                 /**
