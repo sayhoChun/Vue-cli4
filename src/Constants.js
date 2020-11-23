@@ -1,6 +1,5 @@
-// const URL = "106.10.33.215";
-// const URL = "sayho.site"
-const URL = "localhost";
+const URL = "sayho.site";
+// const URL = "localhost";
 
 export default Object.freeze({
     API_URL: `http://${URL}:10050`,
